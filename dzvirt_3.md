@@ -93,30 +93,34 @@ Hey, Netology
 ```docker run -v /Users/maksimtomaev/Downloads/docker/data:/data --name debian-container -d -t debian```
 
 - Смотрим запущенные контейнеры:
-```
-docker ps
-CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS          PORTS     NAMES
-8e3929857d3c   debian    "bash"        5 seconds ago    Up 4 seconds              debian-container
-b00b96ff3c2d   centos    "/bin/bash"   58 seconds ago   Up 54 seconds             centos-container
-```
+```.   
+docker ps.  
+CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS          PORTS     NAMES.  
+8e3929857d3c   debian    "bash"        5 seconds ago    Up 4 seconds              debian-container  
+b00b96ff3c2d   centos    "/bin/bash"   58 seconds ago   Up 54 seconds             centos-container  
+```   
 - Подключаемся к первому контейнеру с помощью ```docker exec``` и создаем текстовый файл в ```/data```:  
-```$ docker exec centos-container /bin/bash -c "echo test_message>/data/readme.md"```
+```$ docker exec centos-container /bin/bash -c "echo test_message>/data/readme.md"```   
 
-- Добавляем еще один файл в папку ```/data``` на хостовой машине:
+- Добавляем еще один файл в папку ```/data``` на хостовой машине:   
 ```
-vim readme_host.md
-  test
-```
-
+vim readme_host.md  
+  test  
+```   
+   
 - Подключаемся во второй контейнер и отображаем листинг и содержание файлов в ```/data``` контейнера.  
 ```
-docker exec -it debian-container /bin/bash
-root@8e3929857d3c:/# ls 
-bin   data  etc   lib	 mnt  proc  run   srv  tmp  var
-boot  dev   home  media  opt  root  sbin  sys  usr
-root@8e3929857d3c:/# cd data/
-root@8e3929857d3c:/data# ls
-readme.md  readme_host.md
-```
+docker exec -it debian-container /bin/bash   
+root@8e3929857d3c:/# ls   
+bin   data  etc   lib	 mnt  proc  run   srv  tmp  var   
+boot  dev   home  media  opt  root  sbin  sys  usr   
+root@8e3929857d3c:/# cd data/   
+root@8e3929857d3c:/data# ls   
+readme.md  readme_host.md.   
+```   
+## Задача 4*
+Воспроизведите практическую часть лекции самостоятельно.   
+Соберите Docker-образ с Ansible, загрузите на Docker Hub и пришлите ссылку вместе с остальными ответами к задачам.   
 
-
+## Решение   
+[Ссылка на образ](https://hub.docker.com/layers/tomaevmax/ansible/2.9.24/images/sha256-4f84ea287457fcf1637dc610cd0a007aec6d6d6d6554ab2907c653239438145a?context=repo)
