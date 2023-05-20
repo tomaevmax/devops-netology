@@ -149,4 +149,21 @@ Outputs:
 external_ip_address_node01_yandex_cloud = "51.250.88.173"
 internal_ip_address_node01_yandex_cloud = "192.168.101.34"   
 ```   
-![Снимок экрана 2023-05-20 в 10 10 02](https://github.com/tomaevmax/devops-netology/assets/32243921/c3c18a5e-5837-44f3-a20b-c0095e906e68)
+![Снимок экрана 2023-05-20 в 10 10 02](https://github.com/tomaevmax/devops-netology/assets/32243921/c3c18a5e-5837-44f3-a20b-c0095e906e68)   
+
+## Задача 3   
+С помощью Ansible и Docker Compose разверните на виртуальной машине из предыдущего задания систему мониторинга на основе Prometheus/Grafana. Используйте Ansible-код в директории (src/ansible).   
+Чтобы получить зачёт, вам нужно предоставить вывод команды "docker ps" , все контейнеры, описанные в docker-compose, должны быть в статусе "Up".   
+
+## Решение  
+```
+centos@node01 ~]$ sudo docker ps
+CONTAINER ID   IMAGE                              COMMAND                  CREATED         STATUS                   PORTS                                                                              NAMES
+936046bd49b5   prom/prometheus:v2.17.1            "/bin/prometheus --c…"   2 minutes ago   Up 2 minutes             9090/tcp                                                                           prometheus
+989ad9c96f38   prom/alertmanager:v0.20.0          "/bin/alertmanager -…"   2 minutes ago   Up 2 minutes             9093/tcp                                                                           alertmanager
+7b5b94d58251   prom/pushgateway:v1.2.0            "/bin/pushgateway"       2 minutes ago   Up 2 minutes             9091/tcp                                                                           pushgateway
+c10f300286db   grafana/grafana:7.4.2              "/run.sh"                2 minutes ago   Up 2 minutes             3000/tcp                                                                           grafana
+f92415bd9d35   prom/node-exporter:v0.18.1         "/bin/node_exporter …"   2 minutes ago   Up 2 minutes             9100/tcp                                                                           nodeexporter
+c411c726afc9   gcr.io/cadvisor/cadvisor:v0.47.0   "/usr/bin/cadvisor -…"   2 minutes ago   Up 2 minutes (healthy)   8080/tcp                                                                           cadvisor
+fd8ed642c4f5   stefanprodan/caddy                 "/sbin/tini -- caddy…"   2 minutes ago   Up 2 minutes             0.0.0.0:3000->3000/tcp, 0.0.0.0:9090-9091->9090-9091/tcp, 0.0.0.0:9093->9093/tcp   caddy   
+```
