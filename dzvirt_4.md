@@ -166,4 +166,14 @@ c10f300286db   grafana/grafana:7.4.2              "/run.sh"                2 min
 f92415bd9d35   prom/node-exporter:v0.18.1         "/bin/node_exporter …"   2 minutes ago   Up 2 minutes             9100/tcp                                                                           nodeexporter
 c411c726afc9   gcr.io/cadvisor/cadvisor:v0.47.0   "/usr/bin/cadvisor -…"   2 minutes ago   Up 2 minutes (healthy)   8080/tcp                                                                           cadvisor
 fd8ed642c4f5   stefanprodan/caddy                 "/sbin/tini -- caddy…"   2 minutes ago   Up 2 minutes             0.0.0.0:3000->3000/tcp, 0.0.0.0:9090-9091->9090-9091/tcp, 0.0.0.0:9093->9093/tcp   caddy   
-```
+```   
+## Задача 4   
+Откройте веб-браузер, зайдите на страницу http://<внешний_ip_адрес_вашей_ВМ>:3000.   
+Используйте для авторизации логин и пароль из .env-file.   
+Изучите доступный интерфейс, найдите в интерфейсе автоматически созданные docker-compose-панели с графиками(dashboards).   
+Подождите 5-10 минут, чтобы система мониторинга успела накопить данные.   
+Чтобы получить зачёт, предоставьте:   
+скриншот работающего веб-интерфейса Grafana с текущими метриками, как на примере ниже.   
+
+## Решение   
+![Дашбоард](https://github.com/tomaevmax/devops-netology/assets/32243921/5b6360c8-16b9-4862-bdc0-5f5aae015548)
