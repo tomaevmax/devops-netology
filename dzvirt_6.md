@@ -48,6 +48,5 @@ random_string:  GdIb8owIOKq1saZy
 8. Объясните, почему при этом не был удален docker образ nginx:latest ? Ответ подкрепите выдержкой из документации провайдера.   
 
 Ответ:   
-
-
-
+При создании ресурса  resource "docker_image" был включен параметр keep_locally = true , согласно документации при выставленном в true образ не удаляется при операциии destroy.   
+https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/image#keep_locally
