@@ -49,4 +49,14 @@ random_string:  GdIb8owIOKq1saZy
 
 Ответ:   
 При создании ресурса  resource "docker_image" был включен параметр keep_locally = true , согласно документации при выставленном в true образ не удаляется при операциии destroy.   
-https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/image#keep_locally
+https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/image#keep_locally   
+
+## Задача 2   
+
+Изучите в документации provider Virtualbox от shekeriev.
+Создайте с его помощью любую виртуальную машину. Чтобы не использовать VPN советуем выбрать любой образ с расположением в github из списка
+
+Ответ:   
+![plan](https://github.com/tomaevmax/devops-netology/assets/32243921/65f42296-d1ba-4fe9-95cf-908a2507c9b9)   
+   
+![vm](https://github.com/tomaevmax/devops-netology/assets/32243921/cec8b6b6-5305-4378-af9b-4650bae0ec06)   
