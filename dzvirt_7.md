@@ -22,4 +22,6 @@ yandex_compute_instance.platform: Creating...
 
 Error: Error while requesting API to create instance: server-request-id = f9d7382f-5dbc-47d0-adb5-7db08cb3bed4 server-trace-id = 69afd10ad50d6ff1:ee536ba6a6bc3b53:69afd10ad50d6ff1:1 client-request-id = f4c34639-975d-4e48-8934-489f7bd1992c client-trace-id = 4860ad7f-7d93-460d-9067-74d3e70ada6c rpc error: code = InvalidArgument desc = the specified number of cores is not available on platform "standard-v1"; allowed core number: 2, 4   
 ```   
-Суть ошибки состояти в тоv, что в яндек облаке для создаваемых VM нельзя указывать нечетное количество ядер.
+Суть ошибки состояти в тоv, что в яндек облаке для создаваемых VM нельзя указывать нечетное количество ядер.   
+preemptible = true - полезная в целях экономии ресурсов, когда можно сразу определить каким vm можно пожертвовать при нехватки ресурсов.   
+ore_fraction=5 - сможет пригодится, когда потребуется запустить больше виртуалок с количеством ядер в настройках большем чем чем физически нам доступном.   
