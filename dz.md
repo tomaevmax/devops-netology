@@ -25,3 +25,41 @@ Error: Error while requesting API to create instance: server-request-id = f9d738
 Суть ошибки состояти в тоv, что в яндек облаке для создаваемых VM нельзя указывать нечетное количество ядер.   
 preemptible = true - полезная в целях экономии ресурсов, когда можно сразу определить каким vm можно пожертвовать при нехватки ресурсов.   
 core_fraction=5 - сможет пригодится, когда потребуется запустить больше виртуалок с количеством ядер в настройках большем чем чем физически нам доступном.   
+
+## Задание 2,3 смотри исходный код   
+
+## Задание 4   
+
+Объявите в файле outputs.tf output типа map, содержащий { instance_name = external_ip } для каждой из ВМ.
+Примените изменения.
+В качестве решения приложите вывод значений ip-адресов команды terraform output   
+
+Ответ:    
+![ip_external](https://github.com/tomaevmax/devops-netology/assets/32243921/82011ba2-a7fd-406b-a550-1a090a7d8b42)
+
+## Задание 5,6 смотри исходный код   
+
+## Задание 7*   
+
+Изучите содержимое файла console.tf. Откройте terraform console, выполните следующие задания:
+
+Напишите, какой командой можно отобразить второй элемент списка test_list?
+Найдите длину списка test_list с помощью функции length(<имя переменной>).
+Напишите, какой командой можно отобразить значение ключа admin из map test_map ?
+Напишите interpolation выражение, результатом которого будет: "John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks", используйте данные из переменных test_list, test_map, servers и функцию length() для подстановки значений.
+В качестве решения предоставьте необходимые команды и их вывод.
+
+Ответ: 
+```   
+> local.test_list[1]
+"staging"   
+```  
+```  
+> length(local.test_list)
+3   
+```  
+``` 
+> lookup(local.test_map, "admin", "not found")
+"John"   
+```   
+
