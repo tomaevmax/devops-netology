@@ -26,7 +26,7 @@ Error: Error while requesting API to create instance: server-request-id = f9d738
 preemptible = true - полезная в целях экономии ресурсов, когда можно сразу определить каким vm можно пожертвовать при нехватки ресурсов.   
 core_fraction=5 - сможет пригодится, когда потребуется запустить больше виртуалок с количеством ядер в настройках большем чем чем физически нам доступном.   
 
-## Задание 2,3 смотри исходный код   
+## Задание 2,3 смотри исходный код    https://github.com/tomaevmax/devops-netology/tree/terraform-02/src
 
 ## Задание 4   
 
@@ -37,7 +37,7 @@ core_fraction=5 - сможет пригодится, когда потребуе
 Ответ:    
 ![ip_external](https://github.com/tomaevmax/devops-netology/assets/32243921/82011ba2-a7fd-406b-a550-1a090a7d8b42)
 
-## Задание 5,6 смотри исходный код   
+## Задание 5,6 смотри исходный код   https://github.com/tomaevmax/devops-netology/tree/terraform-02/src
 
 ## Задание 7*   
 
