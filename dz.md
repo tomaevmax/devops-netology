@@ -26,7 +26,23 @@ Error: Error while requesting API to create instance: server-request-id = f9d738
 preemptible = true - полезная в целях экономии ресурсов, когда можно сразу определить каким vm можно пожертвовать при нехватки ресурсов.   
 core_fraction=5 - сможет пригодится, когда потребуется запустить больше виртуалок с количеством ядер в настройках большем чем чем физически нам доступном.   
 
-## Задание 2,3 смотри исходный код    https://github.com/tomaevmax/devops-netology/tree/terraform-02/src
+## Задание 2   
+Изучите файлы проекта.   
+Замените все "хардкод" значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.   
+Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.   
+Проверьте terraform plan (изменений быть не должно).   
+
+Ответ   
+[variables.tf](variables.tf)
+
+## Задание 3   
+Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.   
+Скопируйте блок ресурса и создайте с его помощью вторую ВМ(в файле main.tf): "netology-develop-platform-db" , cores = 2, memory = 2, core_fraction = 20. Объявите ее переменные с префиксом vm_db_ в том же файле('vms_platform.tf').   
+Примените изменения.   
+
+Ответ  
+
+[vms_platform.tf](vms_platform.tf)
 
 ## Задание 4   
 
