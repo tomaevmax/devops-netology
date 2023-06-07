@@ -33,7 +33,7 @@ core_fraction=5 - сможет пригодится, когда потребуе
 Проверьте terraform plan (изменений быть не должно).   
 
 Ответ   
-[variables.tf](variables.tf)
+[variables.tf](/src/variables.tf)
 
 ## Задание 3   
 Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.   
@@ -42,7 +42,7 @@ core_fraction=5 - сможет пригодится, когда потребуе
 
 Ответ  
 
-[vms_platform.tf](vms_platform.tf)
+[vms_platform.tf](/src/vms_platform.tf)
 
 ## Задание 4   
 
