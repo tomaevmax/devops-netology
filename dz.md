@@ -53,7 +53,23 @@ core_fraction=5 - сможет пригодится, когда потребуе
 Ответ:    
 ![ip_external](https://github.com/tomaevmax/devops-netology/assets/32243921/82011ba2-a7fd-406b-a550-1a090a7d8b42)
 
-## Задание 5,6 смотри исходный код   https://github.com/tomaevmax/devops-netology/tree/terraform-02/src
+## Задание 5   
+В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.   
+Замените переменные с именами ВМ из файла variables.tf на созданные вами local переменные.   
+Примените изменения.   
+
+Ответ:  
+[locals.tf](/src/locals.tf)
+[variables.tf](/src/variables.tf)
+
+## Задание 6   
+Вместо использования 3-х переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедените их в переменные типа map с именами "vm_web_resources" и "vm_db_resources".   
+Так же поступите с блоком metadata {serial-port-enable, ssh-keys}, эта переменная должна быть общая для всех ваших ВМ.   
+Найдите и удалите все более не используемые переменные проекта.   
+Проверьте terraform plan (изменений быть не должно).   
+
+Ответ: 
+[vms_platform.tf](/src/vms_platform.tf)
 
 ## Задание 7*   
 
