@@ -94,4 +94,8 @@ core_fraction=5 - сможет пригодится, когда потребуе
 > lookup(local.test_map, "admin", "not found")
 "John"   
 ```   
+``` 
+> "${lookup(local.test_map, "admin", "not found")} is ${keys(local.test_map)[0]} for ${local.test_list[2]} server based on OS ${local.servers.production.image} with ${local.servers.production.cpu} cpu, ${local.servers.production.ram} ram and ${length(local.servers.production.disks)} virtual disks"
+"John is admin for production server based on OS ubuntu-20-04 with 10 cpu, 40 ram and 4 virtual disks"  
+```   
 
