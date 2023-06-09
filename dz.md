@@ -34,6 +34,8 @@ core_fraction=5 - сможет пригодится, когда потребуе
 
 Ответ   
 [variables.tf](/src/variables.tf)
+![No change](https://github.com/tomaevmax/devops-netology/assets/32243921/4f669972-feab-4677-9415-c120db0017c8)
+
 
 ## Задание 3   
 Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.   
