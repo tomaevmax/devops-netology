@@ -71,7 +71,9 @@ core_fraction=5 - сможет пригодится, когда потребуе
 Проверьте terraform plan (изменений быть не должно).   
 
 Ответ: 
-[vms_platform.tf](/src/vms_platform.tf)
+[vms_platform.tf](/src/vms_platform.tf)   
+![inter](https://github.com/tomaevmax/devops-netology/assets/32243921/b2a2a4a1-4eeb-4809-87ae-205f20c0fc4e)
+
 
 ## Задание 7*   
 
