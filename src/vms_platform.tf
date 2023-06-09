@@ -1,9 +1,3 @@
-variable  "vm_web_name" {
-  type        = string
-  description = "compute_instance name"
-  default = "netology-develop-platform-web"
-}
-
 variable "vm_web_resources" {
   type = map
   default 	= {
@@ -11,12 +5,6 @@ variable "vm_web_resources" {
     memory = 1
     fraction = 5
   }
-}
-
-variable  "vm_db_name" {
-  type        = string
-  description = "compute_instance name"
-  default = "netology-develop-platform-db"
 }
 
 variable "vm_db_resources" {
