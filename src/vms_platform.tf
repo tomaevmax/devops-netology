@@ -15,7 +15,6 @@ variable "vm_db_resources" {
     fraction = 20
   }
 }
-
 variable  "vm_platform_id" {
   type        = string
   default = "standard-v1"
