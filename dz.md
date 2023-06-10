@@ -34,7 +34,8 @@ core_fraction=5 - сможет пригодится, когда потребуе
 
 Ответ   
 [variables.tf](/src/variables.tf)
-![No change](https://github.com/tomaevmax/devops-netology/assets/32243921/4f669972-feab-4677-9415-c120db0017c8)
+![No change](https://github.com/tomaevmax/devops-netology/assets/32243921/bbac92fe-b7d8-4ba3-9d5e-085e6065d331)
+
 
 
 ## Задание 3   
