@@ -1,26 +1,81 @@
-# Домашнее задание к занятию «Основы Terraform. Yandex Cloud»  
+# Домашнее задание к занятию "Управляющие конструкции в коде Terraform"»  
 
 ## Задача 1   
 
-Изучите проект. В файле variables.tf объявлены переменные для yandex provider.
-Переименуйте файл personal.auto.tfvars_example в personal.auto.tfvars. Заполните переменные (идентификаторы облака, токен доступа). Благодаря .gitignore этот файл не попадет в публичный репозиторий. Вы можете выбрать иной способ безопасно передать секретные данные в terraform.
-Сгенерируйте или используйте свой текущий ssh ключ. Запишите его открытую часть в переменную vms_ssh_root_key.
-Инициализируйте проект, выполните код. Исправьте возникшую ошибку.  
-Ответьте в чем заключается ее суть?
-Ответьте, как в процессе обучения могут пригодиться параметрыpreemptible = true и core_fraction=5 в параметрах ВМ? Ответ в документации Yandex cloud.
+Изучите проект.
+Заполните файл personal.auto.tfvars
+Инициализируйте проект, выполните код (он выполнится даже если доступа к preview нет).
+Примечание: Если у вас не активирован preview доступ к функционалу "Группы безопасности" в Yandex Cloud - запросите доступ у поддержки облачного провайдера. Обычно его выдают в течении 24-х часов.
+Приложите скриншот входящих правил "Группы безопасности" в ЛК Yandex Cloud или скриншот отказа в предоставлении доступа к preview версии.   
+
+Ответ:    
+![Снимок экрана 2023-06-08 в 06 47 51](https://github.com/tomaevmax/devops-netology/assets/32243921/8b4fdc69-ac57-474f-9ec6-d9ba132407ba)
+
+## Задача 2   
+
+Создайте файл count-vm.tf. Опишите в нем создание двух одинаковых ВМ web-1 и web-2(не web-0 и web-1!), с минимальными параметрами, используя мета-аргумент count loop. Назначьте ВМ созданную в 1-м задании группу безопасности.
+Создайте файл for_each-vm.tf. Опишите в нем создание 2 ВМ с именами "main" и "replica" разных по cpu/ram/disk , используя мета-аргумент for_each loop. Используйте переменную типа list(object({ vm_name=string, cpu=number, ram=number, disk=number })). При желании внесите в переменную все возможные параметры.
+ВМ из пункта 2.2 должны создаваться после создания ВМ из пункта 2.1.
+Используйте функцию file в local переменной для считывания ключа ~/.ssh/id_rsa.pub и его последующего использования в блоке metadata, взятому из ДЗ №2.
+Инициализируйте проект, выполните код.   
 
 Ответ:    
 
-![Снимок экрана 2023-06-03 в 06 58 50](https://github.com/tomaevmax/devops-netology/assets/32243921/d105f1cc-8652-4ad7-a136-6f4e20a39b57)   
-
-![Снимок экрана 2023-06-03 в 06 59 01](https://github.com/tomaevmax/devops-netology/assets/32243921/c58e717b-092e-47fb-8a1e-91fd17bb531e)  
-
-В процессе применения плана возникла ошибка.
-
 ``` 
-yandex_compute_instance.platform: Creating...   
+data.yandex_compute_image.ubuntu: Reading...
+data.yandex_compute_image.ubuntu-2004-lts: Reading...
+data.yandex_compute_image.ubuntu: Read complete after 1s [id=fd83vhe8fsr4pe98v6oj]
+data.yandex_compute_image.ubuntu-2004-lts: Read complete after 1s [id=fd83vhe8fsr4pe98v6oj]
 
-Error: Error while requesting API to create instance: server-request-id = f9d7382f-5dbc-47d0-adb5-7db08cb3bed4 server-trace-id = 69afd10ad50d6ff1:ee536ba6a6bc3b53:69afd10ad50d6ff1:1 client-request-id = f4c34639-975d-4e48-8934-489f7bd1992c client-trace-id = 4860ad7f-7d93-460d-9067-74d3e70ada6c rpc error: code = InvalidArgument desc = the specified number of cores is not available on platform "standard-v1"; allowed core number: 2, 4   
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+yandex_vpc_network.develop: Creating...
+yandex_vpc_network.develop: Creation complete after 2s [id=enpgg29a7eqt2l6hsqus]
+yandex_vpc_subnet.develop: Creating...
+yandex_vpc_security_group.example: Creating...
+yandex_vpc_subnet.develop: Creation complete after 0s [id=e9b8fk3nbcakfks3227m]
+yandex_compute_instance.database: Creating...
+yandex_compute_instance.example[0]: Creating...
+yandex_compute_instance.example[1]: Creating...
+yandex_compute_instance.platform: Creating...
+yandex_vpc_security_group.example: Creation complete after 1s [id=enpr2ncjjmne9uvunu4g]
+yandex_compute_instance.database: Still creating... [10s elapsed]
+yandex_compute_instance.example[0]: Still creating... [10s elapsed]
+yandex_compute_instance.example[1]: Still creating... [10s elapsed]
+yandex_compute_instance.platform: Still creating... [10s elapsed]
+yandex_compute_instance.database: Still creating... [20s elapsed]
+yandex_compute_instance.example[1]: Still creating... [20s elapsed]
+yandex_compute_instance.example[0]: Still creating... [20s elapsed]
+yandex_compute_instance.platform: Still creating... [20s elapsed]
+yandex_compute_instance.example[0]: Creation complete after 28s [id=fhmhq1a3nh4q5lc0ucp3]
+yandex_compute_instance.example[1]: Still creating... [30s elapsed]
+yandex_compute_instance.database: Still creating... [30s elapsed]
+yandex_compute_instance.platform: Still creating... [30s elapsed]
+yandex_compute_instance.database: Creation complete after 32s [id=fhmjkjjfce4gin7iat70]
+yandex_compute_instance.platform: Creation complete after 32s [id=fhmkroh85mc5mgloi71m]
+yandex_compute_instance.example[1]: Creation complete after 38s [id=fhmgqtc0utjkfj5phs9t]
+yandex_compute_instance.test_for["0"]: Creating...
+yandex_compute_instance.test_for["1"]: Creating...
+yandex_compute_instance.test_for["0"]: Still creating... [10s elapsed]
+yandex_compute_instance.test_for["1"]: Still creating... [10s elapsed]
+yandex_compute_instance.test_for["1"]: Still creating... [20s elapsed]
+yandex_compute_instance.test_for["0"]: Still creating... [20s elapsed]
+yandex_compute_instance.test_for["0"]: Still creating... [30s elapsed]
+yandex_compute_instance.test_for["1"]: Still creating... [30s elapsed]
+yandex_compute_instance.test_for["0"]: Creation complete after 31s [id=fhmrn12qp608modjipnt]
+yandex_compute_instance.test_for["1"]: Creation complete after 33s [id=fhm37hu2hitgmm3opots]
+
+Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+database_external_ip_address = "158.160.32.101"
+platform_external_ip_address = "158.160.63.137"
+
 ```   
 Суть ошибки состояти в тоv, что в яндек облаке для создаваемых VM нельзя указывать нечетное количество ядер.   
 preemptible = true - полезная в целях экономии ресурсов, когда можно сразу определить каким vm можно пожертвовать при нехватки ресурсов.   
