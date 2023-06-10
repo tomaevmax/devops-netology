@@ -5,8 +5,3 @@ output "example_external_ip_address" {
 output "database_external_ip_address" {
   value = yandex_compute_instance.database.network_interface[0].nat_ip_address
 }
-
-output "servers" {
-  for_each = yandex_compute_instance
-  value = yandex_compute_instance.["${each.key}"].network_interface[0].nat_ip_address
-}
