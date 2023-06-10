@@ -13,7 +13,7 @@ data "yandex_compute_image" "ubuntu" {
   family = var.vm_web_image
 }
 
-resource "yandex_compute_instance" "platform" {
+resource "yandex_compute_instance" "example" {
   name        = local.name_web
   platform_id = var.vm_platform_id
   resources {

@@ -1,5 +1,5 @@
 #создаем 2 идентичные ВМ
-resource "yandex_compute_instance" "example" {
+resource "yandex_compute_instance" "webservers" {
   name        = "netology-develop-platform-web-${count.index}"
   platform_id = "standard-v1"
   
