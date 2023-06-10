@@ -36,3 +36,7 @@ variable  "vm_web_image" {
   description = "ubuntu release name"
   default = "ubuntu-2004-lts"
 }
+#считываем данные об образе ОС
+data "yandex_compute_image" "ubuntu-2004-lts" {
+  family = "ubuntu-2004-lts"
+}
