@@ -73,7 +73,8 @@ core_fraction=5 - сможет пригодится, когда потребуе
 
 Ответ: 
 [vms_platform.tf](/src/vms_platform.tf)   
-![inter](https://github.com/tomaevmax/devops-netology/assets/32243921/b2a2a4a1-4eeb-4809-87ae-205f20c0fc4e)
+![Снимок экрана 2023-06-10 в 18 07 29](https://github.com/tomaevmax/devops-netology/assets/32243921/150051cf-3d1c-451a-9c16-518ca21de1cc)
+
 
 
 ## Задание 7*   
