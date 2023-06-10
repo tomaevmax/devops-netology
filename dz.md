@@ -17,9 +17,12 @@
 Создайте файл for_each-vm.tf. Опишите в нем создание 2 ВМ с именами "main" и "replica" разных по cpu/ram/disk , используя мета-аргумент for_each loop. Используйте переменную типа list(object({ vm_name=string, cpu=number, ram=number, disk=number })). При желании внесите в переменную все возможные параметры.
 ВМ из пункта 2.2 должны создаваться после создания ВМ из пункта 2.1.
 Используйте функцию file в local переменной для считывания ключа ~/.ssh/id_rsa.pub и его последующего использования в блоке metadata, взятому из ДЗ №2.
-Инициализируйте проект, выполните код.   
+Инициализируйте проект, выполните код.  
 
 Ответ:    
+
+[count-vm.tf](/src/count-vm.tf)   
+[for_each-vm.tf](/src/for_each-vm.tf)   
 
 ``` 
 data.yandex_compute_image.ubuntu: Reading...
