@@ -151,3 +151,4 @@ platform_external_ip_address = "158.160.105.227"
 Выполните код. Приложите скриншот получившегося файла.   
 
 Ответ:    
+![Снимок экрана 2023-06-10 в 14 27 17](https://github.com/tomaevmax/devops-netology/assets/32243921/0ce794dd-25e8-486c-b490-1edb4b037064)
