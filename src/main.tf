@@ -1,70 +1,33 @@
-resource "yandex_vpc_network" "develop" {
-  name = var.vpc_name
-}
-resource "yandex_vpc_subnet" "develop" {
-  name           = var.vpc_name
-  zone           = var.default_zone
-  network_id     = yandex_vpc_network.develop.id
-  v4_cidr_blocks = var.default_cidr
-}
-
-
-data "yandex_compute_image" "ubuntu" {
-  family = var.vm_web_image
-}
-
-resource "yandex_compute_instance" "example" {
-  name        = local.name_web
-  platform_id = var.vm_platform_id
-  resources {
-    cores         = var.vm_web_resources.cores
-    memory        = var.vm_web_resources.memory
-    core_fraction = var.vm_web_resources.fraction
-  }
-  boot_disk {
-    initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
-    }
-  }
-  scheduling_policy {
-    preemptible = var.vm_scheduling_policy
-  }
-  network_interface {
-    subnet_id = yandex_vpc_subnet.develop.id
-    nat       = var.vm_network_interface_nat
-  }
+module "test-vm" {
+  source          = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
+  env_name        = "develop"
+  network_id      =  module.vpc_dev.vpc_id
+  subnet_zones    = ["ru-central1-a"]
+  subnet_ids      =  [module.vpc_dev.subnet_id]
+  instance_name   = "web"
+  instance_count  = 2
+  image_family    = "ubuntu-2004-lts"
+  public_ip       = true
 
   metadata = {
-    serial-port-enable = var.vm_metadata_resources.metadata.serial-port-enable
-    ssh-keys           =  var.vm_metadata_resources.metadata.ssh-keys
+      user-data          = data.template_file.cloudinit.rendered #Для демонстрации №3
+      serial-port-enable = 1
   }
 
 }
 
-resource "yandex_compute_instance" "database" {
-  name        = local.name_db
-  platform_id = var.vm_platform_id
-  resources {
-    cores         = var.vm_db_resources.cores
-    memory        = var.vm_db_resources.memory
-    core_fraction = var.vm_db_resources.fraction
-  }
-  boot_disk {
-    initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
-    }
-  }
-  scheduling_policy {
-    preemptible = var.vm_scheduling_policy
-  }
-  network_interface {
-    subnet_id = yandex_vpc_subnet.develop.id
-    nat       = var.vm_network_interface_nat
-  }
-
-  metadata = {
-    serial-port-enable = var.vm_metadata_resources.metadata.serial-port-enable
-    ssh-keys           =  var.vm_metadata_resources.metadata.ssh-keys
-  }
-
+module "vpc_dev" {
+  source       = "./modules/vpc_dev"
+  vpc_name     = "develop"
+  default_zone = "ru-central1-a"
+  default_cidr = ["10.0.1.0/24"]
 }
+
+#Пример передачи cloud-config в ВМ для демонстрации №3
+data "template_file" "cloudinit" {
+ template = file("./cloud-init.yml")
+  vars = {
+    ssh_public_key     = var.vms_ssh_root_key
+  }
+}
+
