@@ -20,68 +20,15 @@
 
 Ответ:    
 
-[count-vm.tf](/src/count-vm.tf)   
-[for_each-vm.tf](/src/for_each-vm.tf)   
+[modul](/src/modules/vpc_dev)   
+[docs](/src/modules/vpc_dev/docs.md)   
 
-``` 
-data.yandex_compute_image.ubuntu: Reading...
-data.yandex_compute_image.ubuntu-2004-lts: Reading...
-data.yandex_compute_image.ubuntu: Read complete after 1s [id=fd83vhe8fsr4pe98v6oj]
-data.yandex_compute_image.ubuntu-2004-lts: Read complete after 1s [id=fd83vhe8fsr4pe98v6oj]
 
-Do you want to perform these actions?
-  Terraform will perform the actions described above.
-  Only 'yes' will be accepted to approve.
-
-  Enter a value: yes
-
-yandex_vpc_network.develop: Creating...
-yandex_vpc_network.develop: Creation complete after 2s [id=enpgg29a7eqt2l6hsqus]
-yandex_vpc_subnet.develop: Creating...
-yandex_vpc_security_group.example: Creating...
-yandex_vpc_subnet.develop: Creation complete after 0s [id=e9b8fk3nbcakfks3227m]
-yandex_compute_instance.database: Creating...
-yandex_compute_instance.example[0]: Creating...
-yandex_compute_instance.example[1]: Creating...
-yandex_compute_instance.platform: Creating...
-yandex_vpc_security_group.example: Creation complete after 1s [id=enpr2ncjjmne9uvunu4g]
-yandex_compute_instance.database: Still creating... [10s elapsed]
-yandex_compute_instance.example[0]: Still creating... [10s elapsed]
-yandex_compute_instance.example[1]: Still creating... [10s elapsed]
-yandex_compute_instance.platform: Still creating... [10s elapsed]
-yandex_compute_instance.database: Still creating... [20s elapsed]
-yandex_compute_instance.example[1]: Still creating... [20s elapsed]
-yandex_compute_instance.example[0]: Still creating... [20s elapsed]
-yandex_compute_instance.platform: Still creating... [20s elapsed]
-yandex_compute_instance.example[0]: Creation complete after 28s [id=fhmhq1a3nh4q5lc0ucp3]
-yandex_compute_instance.example[1]: Still creating... [30s elapsed]
-yandex_compute_instance.database: Still creating... [30s elapsed]
-yandex_compute_instance.platform: Still creating... [30s elapsed]
-yandex_compute_instance.database: Creation complete after 32s [id=fhmjkjjfce4gin7iat70]
-yandex_compute_instance.platform: Creation complete after 32s [id=fhmkroh85mc5mgloi71m]
-yandex_compute_instance.example[1]: Creation complete after 38s [id=fhmgqtc0utjkfj5phs9t]
-yandex_compute_instance.test_for["0"]: Creating...
-yandex_compute_instance.test_for["1"]: Creating...
-yandex_compute_instance.test_for["0"]: Still creating... [10s elapsed]
-yandex_compute_instance.test_for["1"]: Still creating... [10s elapsed]
-yandex_compute_instance.test_for["1"]: Still creating... [20s elapsed]
-yandex_compute_instance.test_for["0"]: Still creating... [20s elapsed]
-yandex_compute_instance.test_for["0"]: Still creating... [30s elapsed]
-yandex_compute_instance.test_for["1"]: Still creating... [30s elapsed]
-yandex_compute_instance.test_for["0"]: Creation complete after 31s [id=fhmrn12qp608modjipnt]
-yandex_compute_instance.test_for["1"]: Creation complete after 33s [id=fhm37hu2hitgmm3opots]
-
-Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-database_external_ip_address = "158.160.32.101"
-platform_external_ip_address = "158.160.63.137"
-
-```   
 ## Задача 3   
-Создайте 3 одинаковых виртуальных диска, размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле disk_vm.tf .
-Создайте в том же файле одну ВМ c именем "storage" . Используйте блок dynamic secondary_disk{..} и мета-аргумент for_each для подключения созданных вами дополнительных дисков.   
+
+Выведите список ресурсов в стейте.
+Удалите из стейта модуль vpc.
+Импортируйте его обратно. Проверьте terraform plan - изменений быть не должно. Приложите список выполненных команд и вывод.   
 
 Ответ:    
 
@@ -143,11 +90,3 @@ database_external_ip_address = "158.160.105.128"
 platform_external_ip_address = "158.160.105.227"
   
 ```   
-## Задача 4  
-
-В файле ansible.tf создайте inventory-файл для ansible. Используйте функцию tepmplatefile и файл-шаблон для создания ansible inventory-файла из лекции. Готовый код возьмите из демонстрации к лекции demonstration2. Передайте в него в качестве переменных группы виртуальных машин из задания 2.1, 2.2 и 3.2.(т.е. 5 ВМ)
-Инвентарь должен содержать 3 группы [webservers], [databases], [storage] и быть динамическим, т.е. обработать как группу из 2-х ВМ так и 999 ВМ.
-Выполните код. Приложите скриншот получившегося файла.   
-
-Ответ:    
-![Снимок экрана 2023-06-10 в 14 27 17](https://github.com/tomaevmax/devops-netology/assets/32243921/0ce794dd-25e8-486c-b490-1edb4b037064)
