@@ -34,24 +34,32 @@
 
 Ответ:    
 
-[disk-vm.tf](/src/disk_vm.tf)  
 ```  
  terraform state list
 
 ```   
+![Снимок экрана 2023-06-15 в 06 47 11](https://github.com/tomaevmax/devops-netology/assets/32243921/c39e96ad-8a46-4b27-b6d1-0623a111b4d2)   
+
 ```  
  terraform state rm 'module.vpc_dev'
 
 ```   
+![Снимок экрана 2023-06-15 в 06 54 19](https://github.com/tomaevmax/devops-netology/assets/32243921/11d1cdbf-1160-4d70-b79b-43ba81e89132)
+
 ```  
  terraform import 'module.vpc_dev.yandex_vpc_network.develop' enpfbes96a495cn0ejn4
 
 ```   
+![Снимок экрана 2023-06-15 в 06 55 45](https://github.com/tomaevmax/devops-netology/assets/32243921/638e012b-6b5f-40f3-9bc4-376cfb5282b3)   
+
 ```  
  terraform import 'module.vpc_dev.yandex_vpc_subnet.develop' e9b5h9g371tvaubj6ebd 
 
 ```  
+![Снимок экрана 2023-06-15 в 06 56 25](https://github.com/tomaevmax/devops-netology/assets/32243921/5ff35b19-1306-4832-9aff-414a101b7daa)
+
 ```  
  terraform plan
 
 ```   
+![Снимок экрана 2023-06-15 в 06 56 38](https://github.com/tomaevmax/devops-netology/assets/32243921/39ffd465-05b1-48e6-beae-c8e4641f48c3)
