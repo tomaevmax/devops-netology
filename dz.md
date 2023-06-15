@@ -8,6 +8,7 @@
 Предоставьте скриншот подключения к консоли и вывод команды sudo nginx -t.   
 
 Ответ:    
+![Снимок экрана 2023-06-14 в 06 49 24](https://github.com/tomaevmax/devops-netology/assets/32243921/2fce4051-bd9e-4c8b-bb7d-bbbacbc88c5c)
 
 
 ## Задача 2   
