@@ -31,3 +31,15 @@ data "template_file" "cloudinit" {
   }
 }
 
+terraform {
+  backend "s3" {
+    endpoint                    = "storage.yandexcloud.net"
+    bucket                      = "tfstate-develop05"
+    region                      = "ru-central1"
+    key                         = "terraform.tfstate"
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    dynamodb_endpoint           = "https://docapi.serverless.yandexcloud.net/ru-central1/b1geg4s73ugdcad9uvhs/etn5c5hqs9foeckv3pev"
+    dynamodb_table              = "tfstate-lock-develop"
+  }
+}
