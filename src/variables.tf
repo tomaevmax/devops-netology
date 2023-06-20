@@ -53,5 +53,24 @@ variable "vm_db_name" {
   description = "example vm_db_ prefix"
 }
 
+variable "ip_addr" {
+  type        = string
+  default     ="1111.168.0.1"
+  description = "ip-адрес"
+  validation {
+    condition = can(regex("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",var.ip_addr))
+    error_message = "Некорректный IP-адрес"
+  }
+}
+
+variable "addr_list" {
+  type        = list(string)
+  default     = ["192.168.0222.1", "1.1.1.1", "1344.0.0.1"]
+  description = "список ip-адресов"
+  validation {
+    condition = can([for ip in var.addr_list: regex("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$", ip)])
+    error_message = "Некорректный список IP-адресов"
+  }
+}
 
 
