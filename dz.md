@@ -135,3 +135,11 @@ Reference: https://github.com/terraform-linters/tflint-ruleset-terraform/blob/v0
 Ответ:    
 
 [Pull request](https://github.com/tomaevmax/devops-netology/pull/1)   
+
+## Задача 3   
+
+Напишите переменные с валидацией и протестируйте их, заполнив default верными и неверными значениями. Предоставьте скриншоты проверок:   
+type=string, description="ip-адрес", проверка что значение переменной содержит верный IP-адрес с помощью функций cidrhost() или regex(). Тесты: "192.168.0.1" и "1920.1680.0.1"   
+type=list(string), description="список ip-адресов", проверка что все адреса верны. Тесты: ["192.168.0.1", "1.1.1.1", "127.0.0.1"] и ["192.168.0.1", "1.1.1.1", "1270.0.0.1"]   
+
+Ответ:    
