@@ -143,7 +143,7 @@ type=string, description="ip-адрес", проверка что значени
 type=list(string), description="список ip-адресов", проверка что все адреса верны. Тесты: ["192.168.0.1", "1.1.1.1", "127.0.0.1"] и ["192.168.0.1", "1.1.1.1", "1270.0.0.1"]   
 
 Ответ:    
-[validation](/source/variables.tf)   
+[validation](/src/variables.tf)   
 
 ![Снимок экрана 2023-06-20 в 20 19 35](https://github.com/tomaevmax/devops-netology/assets/32243921/fcae650f-0787-4a0f-8268-027f0ea26961)
 
