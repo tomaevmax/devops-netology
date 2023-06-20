@@ -134,4 +134,4 @@ Reference: https://github.com/terraform-linters/tflint-ruleset-terraform/blob/v0
 
 Ответ:    
 
-[Pull request]([/src/modules/vpc_dev/docs.md](https://github.com/tomaevmax/devops-netology/pull/1))   
+[Pull request](https://github.com/tomaevmax/devops-netology/pull/1)   
