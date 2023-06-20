@@ -123,3 +123,15 @@ Reference: https://github.com/terraform-linters/tflint-ruleset-terraform/blob/v0
 ![Снимок экрана 2023-06-19 в 07 00 30](https://github.com/tomaevmax/devops-netology/assets/32243921/2172b9d0-6e87-42c2-a14b-d662d689a16e)   
 Принудительно разблокируем state   
 ![Снимок экрана 2023-06-19 в 07 18 11](https://github.com/tomaevmax/devops-netology/assets/32243921/ec63d24f-310e-4d7b-b551-c120d91028d1)   
+
+## Задача 3   
+
+Сделайте в GitHub из ветки 'terraform-05' новую ветку 'terraform-hotfix'.
+Проверье код с помощью tflint и checkov, исправьте все предупреждения и ошибки в 'terraform-hotfix', сделайте комит.
+Откройте новый pull request 'terraform-hotfix' --> 'terraform-05'.
+Вставьте в комментарий PR результат анализа tflint и checkov, план изменений инфраструктуры из вывода команды terraform plan.
+Пришлите ссылку на PR для ревью(вливать код в 'terraform-05' не нужно).
+
+Ответ:    
+
+https://github.com/tomaevmax/devops-netology/pull/1
