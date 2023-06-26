@@ -199,7 +199,7 @@ ansible-doc -t connection -l
 
 ## Ответ  
 
-[prod.yml](/inventory/prod.yml)     
+[prod.yml](/playbook/inventory/prod.yml)     
 
 ## Задача 11   
 Запустите playbook на окружении prod.yml. При запуске ansible должен запросить у вас пароль. Убедитесь, что факты some_fact для каждого из хостов определены из верных group_vars.   
