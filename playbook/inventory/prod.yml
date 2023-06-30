@@ -1,13 +1,5 @@
 ---
-  el:
-    hosts:
-      centos-container:
-        ansible_connection: docker
-  deb:
-    hosts:
-      Ubuntu1804:
-        ansible_connection: docker
-  local:
-    hosts:
-      localhost:
-        ansible_connection: local
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_host: <IP_here>
