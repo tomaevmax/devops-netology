@@ -173,4 +173,4 @@ vector-01                  : ok=3    changed=0    unreachable=0    failed=0    s
  Готовый playbook выложите в свой репозиторий, поставьте тег 08-ansible-02-playbook на фиксирующий коммит, в ответ предоставьте ссылку на него.   
 
 ## Ответ  
-
+[[commit](https://github.com/tomaevmax/devops-netology/commit/02a9e8b36b1d6d80bd2890158c8ec4500e9d48db) 
