@@ -2,4 +2,10 @@
 clickhouse:
   hosts:
     clickhouse-01:
-      ansible_host: <IP_here>
+      ansible_user: netology
+      ansible_host: 51.250.2.246
+vector:
+  hosts:
+    vector-01:
+      ansible_user: netology
+      ansible_host: 84.201.130.183

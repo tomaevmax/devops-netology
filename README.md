@@ -1,250 +1,176 @@
 
-# Домашнее задание "Введение в Ansible"   
+# Домашнее задание к занятию 2 «Работа с Playbook»   
 
-## Задача 1   
-Попробуйте запустить playbook на окружении из test.yml, зафиксируйте значение, которое имеет факт some_fact для указанного хоста при выполнении playbook.   
+## Задача   
+  Подготовьте свой inventory-файл prod.yml.   
 
 ## Ответ    
+[prod.yml](/playbook/inventory/prod.yml)  
 
-````
-➜  playbook git:(ansible-dz1) ✗ ansible-playbook -i inventory/test.yml site.yml 
+## Задача  
+ Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает vector.   
+При создании tasks рекомендую использовать модули: get_url, template, unarchive, file.   
+Tasks должны: скачать дистрибутив нужной версии, выполнить распаковку в выбранную директорию, установить vector.   
 
-PLAY [Print os facts] *********************************************************************************************************************************************************************************************************************************************************************************************
+## Ответ
+[site.yml](/playbook/site.yml) 
 
-TASK [Gathering Facts] ********************************************************************************************************************************************************************************************************************************************************************************************
-[WARNING]: Platform darwin on host localhost is using the discovered Python interpreter at /opt/homebrew/bin/python3.11, but future installation of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [localhost]
-
-TASK [Print OS] ***************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [localhost] => {
-    "msg": "MacOSX"
-}
-
-TASK [Print fact] *************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [localhost] => {
-    "msg": 12
-}
-
-PLAY RECAP ********************************************************************************************************************************************************************************************************************************************************************************************************
-localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-
-
-````   
-
-## Задача 2  
-Найдите файл с переменными (group_vars), в котором задаётся найденное в первом пункте значение, и поменяйте его на all default fact.   
-
-## Ответ  
-
-[examp.yml](/playbook/group_vars/all/examp.yml)  
-````   
-➜  playbook git:(ansible-dz1) ✗ ansible-playbook -i inventory/test.yml site.yml
-
-PLAY [Print os facts] *********************************************************************************************************************************************************************************************************************************************************************************************
-
-TASK [Gathering Facts] ********************************************************************************************************************************************************************************************************************************************************************************************
-[WARNING]: Platform darwin on host localhost is using the discovered Python interpreter at /opt/homebrew/bin/python3.11, but future installation of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [localhost]
-
-TASK [Print OS] ***************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [localhost] => {
-    "msg": "MacOSX"
-}
-
-TASK [Print fact] *************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [localhost] => {
-    "msg": "all default fact"
-}
-
-PLAY RECAP ********************************************************************************************************************************************************************************************************************************************************************************************************
-localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-
-````   
-## Задача 4  
-Проведите запуск playbook на окружении из prod.yml. Зафиксируйте полученные значения some_fact для каждого из managed host.   
-
-## Ответ  
-
-````
-➜  playbook git:(ansible-dz1) ✗ ansible-playbook -i inventory/prod.yml site.yml     
-
-PLAY [Print os facts] *********************************************************************************************************************************************************************************************************************************************************************************************
-
-TASK [Gathering Facts] ********************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container]
-[WARNING]: Distribution Ubuntu 18.04 on host Ubuntu1804 should use /usr/bin/python3, but is using /usr/bin/python2.7, since the discovered platform python interpreter was not present. See https://docs.ansible.com/ansible-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [Ubuntu1804]
-
-TASK [Print OS] ***************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "CentOS"
-}
-ok: [Ubuntu1804] => {
-    "msg": "Ubuntu"
-}
-
-TASK [Print fact] *************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "el"
-}
-ok: [Ubuntu1804] => {
-    "msg": "deb"
-}
-
-PLAY RECAP ********************************************************************************************************************************************************************************************************************************************************************************************************
-Ubuntu1804                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-centos-container           : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-   
-````   
-## Задача 5  
-Добавьте факты в group_vars каждой из групп хостов так, чтобы для some_fact получились значения: для deb — deb default fact, для el — el default fact.   
-
-## Ответ  
-
-[deb/examp.yml](/playbook/group_vars/deb/examp.yml)  
-[el/examp.yml](/playbook/group_vars/el/examp.yml)  
-
-## Задача 6  
-Повторите запуск playbook на окружении prod.yml. Убедитесь, что выдаются корректные значения для всех хостов.   
-
-## Ответ  
-
-````
-➜  playbook git:(ansible-dz1) ✗ ansible-playbook -i inventory/prod.yml site.yml     
-
-PLAY [Print os facts] *********************************************************************************************************************************************************************************************************************************************************************************************
-
-TASK [Gathering Facts] ********************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container]
-[WARNING]: Distribution Ubuntu 18.04 on host Ubuntu1804 should use /usr/bin/python3, but is using /usr/bin/python2.7, since the discovered platform python interpreter was not present. See https://docs.ansible.com/ansible-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [Ubuntu1804]
-
-TASK [Print OS] ***************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "CentOS"
-}
-ok: [Ubuntu1804] => {
-    "msg": "Ubuntu"
-}
-
-TASK [Print fact] *************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "el default fact"
-}
-ok: [Ubuntu1804] => {
-    "msg": "deb default fact"
-}
-
-PLAY RECAP ********************************************************************************************************************************************************************************************************************************************************************************************************
-Ubuntu1804                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-centos-container           : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-````   
-## Задача 7  
-При помощи ansible-vault зашифруйте факты в group_vars/deb и group_vars/el с паролем netology.
-
-
-## Ответ  
-[deb/examp.yml](/playbook/group_vars/deb/examp.yml)  
-[el/examp.yml](/playbook/group_vars/el/examp.yml)     
-
-## Задача 8  
-
-Запустите playbook на окружении prod.yml. При запуске ansible должен запросить у вас пароль. Убедитесь в работоспособности.   
-
-## Ответ  
-````   
-➜  playbook git:(ansible-dz1) ✗ ansible-playbook -i inventory/prod.yml site.yml --ask-vault-pass
-Vault password: 
-
-PLAY [Print os facts] *********************************************************************************************************************************************************************************************************************************************************************************************
-
-TASK [Gathering Facts] ********************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container]
-[WARNING]: Distribution Ubuntu 18.04 on host Ubuntu1804 should use /usr/bin/python3, but is using /usr/bin/python2.7, since the discovered platform python interpreter was not present. See https://docs.ansible.com/ansible-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [Ubuntu1804]
-
-TASK [Print OS] ***************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "CentOS"
-}
-ok: [Ubuntu1804] => {
-    "msg": "Ubuntu"
-}
-
-TASK [Print fact] *************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "el default fact"
-}
-ok: [Ubuntu1804] => {
-    "msg": "deb default fact"
-}
-
-PLAY RECAP ********************************************************************************************************************************************************************************************************************************************************************************************************
-Ubuntu1804                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-centos-container           : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-````   
-## Задача 9  
-Посмотрите при помощи ansible-doc список плагинов для подключения. Выберите подходящий для работы на control node.    
-
-## Ответ  
-
-ansible-doc -t connection -l 
-Подойдет плагин ansible.builtin.local
-
-## Задача 10   
-
-В prod.yml добавьте новую группу хостов с именем  local, в ней разместите localhost с необходимым типом подключения.   
-
-## Ответ  
-
-[prod.yml](/inventory/prod.yml)     
-
-## Задача 11   
-Запустите playbook на окружении prod.yml. При запуске ansible должен запросить у вас пароль. Убедитесь, что факты some_fact для каждого из хостов определены из верных group_vars.   
+## Задача  
+  Запустите ansible-lint site.yml и исправьте ошибки, если они есть.   
 
 ## Ответ   
-
 ````
-➜  playbook git:(ansible-dz1) ✗ ansible-playbook -i inventory/prod.yml site.yml --ask-vault-pass
-Vault password: 
+➜  playbook git:(ansible-dz2) ✗ ansible-lint site.yml
+WARNING  Listing 1 violation(s) that are fatal
+jinja[spacing]: Jinja2 spacing could be improved: create_db.rc != 0 and create_db.rc !=82 -> create_db.rc != 0 and create_db.rc != 82 (warning)
+site.yml:35 Jinja2 template rewrite recommendation: `create_db.rc != 0 and create_db.rc != 82`.
 
-PLAY [Print os facts] *********************************************************************************************************************************************************************************************************************************************************************************************
+Read documentation for instructions on how to ignore specific rule violations.
 
-TASK [Gathering Facts] ********************************************************************************************************************************************************************************************************************************************************************************************
-[WARNING]: Platform darwin on host localhost is using the discovered Python interpreter at /opt/homebrew/bin/python3.11, but future installation of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [localhost]
-ok: [centos-container]
-[WARNING]: Distribution Ubuntu 18.04 on host Ubuntu1804 should use /usr/bin/python3, but is using /usr/bin/python2.7, since the discovered platform python interpreter was not present. See https://docs.ansible.com/ansible-core/2.15/reference_appendices/interpreter_discovery.html for more information.
-ok: [Ubuntu1804]
+              Rule Violation Summary               
+ count tag            profile rule associated tags 
+     1 jinja[spacing] basic   formatting (warning) 
 
-TASK [Print OS] ***************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "CentOS"
-}
-ok: [Ubuntu1804] => {
-    "msg": "Ubuntu"
-}
-ok: [localhost] => {
-    "msg": "MacOSX"
-}
-
-TASK [Print fact] *************************************************************************************************************************************************************************************************************************************************************************************************
-ok: [centos-container] => {
-    "msg": "el default fact"
-}
-ok: [Ubuntu1804] => {
-    "msg": "deb default fact"
-}
-ok: [localhost] => {
-    "msg": "all default fact"
-}
-
-PLAY RECAP ********************************************************************************************************************************************************************************************************************************************************************************************************
-Ubuntu1804                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-centos-container           : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-
+Passed: 0 failure(s), 1 warning(s) on 1 files. Last profile that met the validation criteria was 'min'.
 ````   
+## Задача  
+Попробуйте запустить playbook на этом окружении с флагом --check.   
+
+## Ответ   
+````   
+➜  playbook git:(ansible-dz2) ✗ ansible-playbook -i inventory/prod.yml site.yml --check
+
+PLAY [Install Clickhouse] *********************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************************
+The authenticity of host '51.250.2.246 (51.250.2.246)' can't be established.
+ED25519 key fingerprint is SHA256:xPs85arnMZHo/8mHTy0Ym7p3XdpXSXxmG6w+l4KM+1A.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+ok: [clickhouse-01]
+
+TASK [Get clickhouse distrib] *****************************************************************************************************************************************
+changed: [clickhouse-01] => (item=clickhouse-client)
+changed: [clickhouse-01] => (item=clickhouse-server)
+failed: [clickhouse-01] (item=clickhouse-common-static) => {"ansible_loop_var": "item", "changed": false, "dest": "./clickhouse-common-static-22.3.3.44.rpm", "elapsed": 0, "item": "clickhouse-common-static", "msg": "Request failed", "response": "HTTP Error 404: Not Found", "status_code": 404, "url": "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-22.3.3.44.noarch.rpm"}
+
+TASK [Get rescue clickhouse distrib] **********************************************************************************************************************************
+changed: [clickhouse-01]
+
+TASK [Install clickhouse packages] ************************************************************************************************************************************
+fatal: [clickhouse-01]: FAILED! => {"changed": false, "msg": "No RPM file matching 'clickhouse-common-static-22.3.3.44.rpm' found on system", "rc": 127, "results": ["No RPM file matching 'clickhouse-common-static-22.3.3.44.rpm' found on system"]}
+
+PLAY RECAP ************************************************************************************************************************************************************
+clickhouse-01              : ok=2    changed=1    unreachable=0    failed=1    skipped=0    rescued=1    ignored=0    
+````   
+## Задача  
+  Запустите playbook на prod.yml окружении с флагом --diff. Убедитесь, что изменения на системе произведены.   
+
+## Ответ   
+````   
+➜  playbook git:(ansible-dz2) ✗ ansible-playbook -i inventory/prod.yml site.yml --diff 
+
+PLAY [Install Clickhouse] *********************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************************
+ok: [clickhouse-01]
+
+TASK [Get clickhouse distrib] *****************************************************************************************************************************************
+changed: [clickhouse-01] => (item=clickhouse-client)
+changed: [clickhouse-01] => (item=clickhouse-server)
+failed: [clickhouse-01] (item=clickhouse-common-static) => {"ansible_loop_var": "item", "changed": false, "dest": "./clickhouse-common-static-22.3.3.44.rpm", "elapsed": 0, "item": "clickhouse-common-static", "msg": "Request failed", "response": "HTTP Error 404: Not Found", "status_code": 404, "url": "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-22.3.3.44.noarch.rpm"}
+
+TASK [Get rescue clickhouse distrib] **********************************************************************************************************************************
+changed: [clickhouse-01]
+
+TASK [Install clickhouse packages] ************************************************************************************************************************************
+changed: [clickhouse-01]
+
+TASK [Flush handlers] *************************************************************************************************************************************************
+
+RUNNING HANDLER [Start clickhouse service] ****************************************************************************************************************************
+changed: [clickhouse-01]
+
+TASK [Create database] ************************************************************************************************************************************************
+changed: [clickhouse-01]
+
+PLAY [Install Vector] *************************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************************
+The authenticity of host '84.201.130.183 (84.201.130.183)' can't be established.
+ED25519 key fingerprint is SHA256:RS/0tdYLmFP8OwajngKqNboa/aVU7z7hjyOR65nO6X8.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+ok: [vector-01]
+
+TASK [Get vector distrib] *********************************************************************************************************************************************
+changed: [vector-01]
+
+TASK [Install vector packages] ****************************************************************************************************************************************
+changed: [vector-01]
+
+TASK [Flush handlers] *************************************************************************************************************************************************
+
+RUNNING HANDLER [Start vector service] ********************************************************************************************************************************
+changed: [vector-01]
+
+PLAY RECAP ************************************************************************************************************************************************************
+clickhouse-01              : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   
+vector-01                  : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+````   
+## Задача  
+  Повторно запустите playbook с флагом --diff и убедитесь, что playbook идемпотентен.   
+
+## Ответ   
+````   
+➜  playbook git:(ansible-dz2) ✗ ansible-playbook -i inventory/prod.yml site.yml --diff
+
+PLAY [Install Clickhouse] *********************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************************
+ok: [clickhouse-01]
+
+TASK [Get clickhouse distrib] *****************************************************************************************************************************************
+ok: [clickhouse-01] => (item=clickhouse-client)
+ok: [clickhouse-01] => (item=clickhouse-server)
+failed: [clickhouse-01] (item=clickhouse-common-static) => {"ansible_loop_var": "item", "changed": false, "dest": "./clickhouse-common-static-22.3.3.44.rpm", "elapsed": 0, "gid": 1000, "group": "netology", "item": "clickhouse-common-static", "mode": "0777", "msg": "Request failed", "owner": "netology", "response": "HTTP Error 404: Not Found", "secontext": "unconfined_u:object_r:user_home_t:s0", "size": 246310036, "state": "file", "status_code": 404, "uid": 1000, "url": "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-22.3.3.44.noarch.rpm"}
+
+TASK [Get rescue clickhouse distrib] **********************************************************************************************************************************
+ok: [clickhouse-01]
+
+TASK [Install clickhouse packages] ************************************************************************************************************************************
+ok: [clickhouse-01]
+
+TASK [Flush handlers] *************************************************************************************************************************************************
+
+TASK [Create database] ************************************************************************************************************************************************
+ok: [clickhouse-01]
+
+PLAY [Install Vector] *************************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [Get vector distrib] *********************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [Install vector packages] ****************************************************************************************************************************************
+ok: [vector-01]
+
+TASK [Flush handlers] *************************************************************************************************************************************************
+
+PLAY RECAP ************************************************************************************************************************************************************
+clickhouse-01              : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   
+vector-01                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+````   
+## Задача  
+ Подготовьте README.md-файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.   
+
+## Ответ   
+[README.md](/playbook/README.md)   
+
+## Задача   
+ Готовый playbook выложите в свой репозиторий, поставьте тег 08-ansible-02-playbook на фиксирующий коммит, в ответ предоставьте ссылку на него.   
+
+## Ответ  
+
