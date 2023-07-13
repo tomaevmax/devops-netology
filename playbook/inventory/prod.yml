@@ -3,14 +3,14 @@ clickhouse:
   hosts:
     clickhouse-01:
       ansible_user: netology
-      ansible_host: 84.252.128.131
+      ansible_host: 51.250.70.156
 vector:
   hosts:
     vector-01:
       ansible_user: netology
-      ansible_host: 84.201.133.74
+      ansible_host: 62.84.113.147
 lighthouse:
   hosts:
     lighthouse-01:
       ansible_user: netology
-      ansible_host: 51.250.84.211
+      ansible_host: 62.84.113.193
