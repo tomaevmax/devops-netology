@@ -706,3 +706,9 @@ ERROR:   py37-ansible30: commands failed
 ERROR:   py39-ansible210: commands failed
 ERROR:   py39-ansible30: commands failed
 ````   
+# Задача   
+7. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.   
+
+# Ответ   
+
+[tag 1.0.3](https://github.com/tomaevmax/vector-role/releases/tag/1.0.3)   
