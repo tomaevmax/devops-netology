@@ -4,7 +4,10 @@
 1. Запустите  molecule test -s centos_7 внутри корневой директории clickhouse-role, посмотрите на вывод команды. Данная команда может отработать с ошибками, это нормально. Наша цель - посмотреть как другие в реальном мире используют молекулу.      
 
 ## Ответ   
-````   
+
+<details>
+<summary>Ответ</summary>
+<br>
 ➜  clickhouse git:(ansible-dz5) ✗ molecule test -s centos_7
 WARNING  Driver docker does not provide a schema.
 INFO     centos_7 scenario test matrix: dependency, cleanup, destroy, syntax, create, prepare, converge, idempotence, side_effect, verify, cleanup, destroy
@@ -135,7 +138,7 @@ PLAY RECAP *********************************************************************
 localhost                  : ok=3    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
 
 INFO     Pruning extra files from scenario ephemeral directory
-````   
+</details>  
 
 ## Задача   
 2. Перейдите в каталог с ролью vector-role и создайте сценарий тестирования по умолчанию при помощи molecule init scenario --driver-name docker.   
