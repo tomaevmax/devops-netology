@@ -147,10 +147,13 @@ INFO     Pruning extra files from scenario ephemeral directory
 <details>
 <summary>Ответ</summary>
 <br> 
+
+ ````
  vector-role git:(master) ✗ molecule init scenario --driver-name docker
 INFO     Initializing new scenario default...
 INFO     Initialized scenario in /Users/maksimtomaev/Downloads/repa/devops-netology/vectore-role/vector-role/molecule/default successfully.
-</details>
+````   
+</details>   
   
 3. Добавьте несколько разных дистрибутивов (centos:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
 4. Добавьте несколько assert в verify.yml-файл для проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска и др.).    
@@ -158,8 +161,10 @@ INFO     Initialized scenario in /Users/maksimtomaev/Downloads/repa/devops-netol
 <details>
 <summary>Ответ</summary>
 <br> 
+ 
 [instance](https://github.com/tomaevmax/vector-role/blob/1.0.2/molecule/default/molecule.yml)   
 [verify](https://github.com/tomaevmax/vector-role/blob/1.0.2/molecule/default/verify.yml)
+
 </details>   
 
 5. Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
@@ -167,6 +172,8 @@ INFO     Initialized scenario in /Users/maksimtomaev/Downloads/repa/devops-netol
 <details>
 <summary>Ответ</summary>
 <br>
+ 
+ ````
 [netology@dz5 vector-role]$ molecule test -s default --destroy never
 INFO     default scenario test matrix: dependency, lint, cleanup, destroy, syntax, create, prepare, converge, idempotence, side_effect, verify, cleanup, destroy
 INFO     Performing prerun...
@@ -293,15 +300,17 @@ INFO     Running default > cleanup
 WARNING  Skipping, cleanup playbook not configured.
 INFO     Running default > destroy
 WARNING  Skipping, '--destroy=never' requested.
-</details>
+````   
+</details>   
  
 6. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.   
 
 <details>
 <summary>Ответ</summary>
 <br>  
+ 
 [tag 1.0.2](https://github.com/tomaevmax/vector-role/releases/tag/1.0.2)   
-</details>
+</details>   
 
 ## Tox
  
@@ -312,6 +321,8 @@ WARNING  Skipping, '--destroy=never' requested.
 <details>
 <summary>Ответ</summary>
 <br>
+
+ ````
 [netology@dz5 vector-role]$ docker run --privileged=True -v /opt/vector-role:/opt/vector-role -w /opt/vector-role -it aragast/netology:latest /bin/bash
 [root@d411305d0da3 vector-role]# tox
 py37-ansible210 create: /opt/vector-role/.tox/py37-ansible210
@@ -347,16 +358,20 @@ ERROR:   py37-ansible210: commands failed
 ERROR:   py37-ansible30: commands failed
 ERROR:   py39-ansible210: commands failed
 ERROR:   py39-ansible30: commands failed
+````   
 </details>   
  
 4. Создайте облегчённый сценарий для molecule с драйвером molecule_podman. Проверьте его на исполнимость.
    
 <details>
 <summary>Ответ</summary>
-<br>  
+<br> 
+ 
+````
 [netology@dz5 vector-role]$ molecule init scenario centos_7 --driver-name podman
 INFO     Initializing new scenario centos_7...
 INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully.
+````   
 </details>
  
 5. Пропишите правильную команду в tox.ini, чтобы запускался облегчённый сценарий.   
@@ -364,9 +379,12 @@ INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully
 <details>
 <summary>Ответ</summary>
 <br>
+
+```
 [netology@dz5 vector-role]$ molecule init scenario centos_7 --driver-name podman
 INFO     Initializing new scenario centos_7...
 INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully.
+````   
 </details>   
 
 6. Пропишите правильную команду в tox.ini, чтобы запускался облегчённый сценарий.   
@@ -374,6 +392,7 @@ INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully
 <details>
 <summary>Ответ</summary>
 <br> 
+ 
 [tox.ini](https://github.com/tomaevmax/vector-role/blob/master/tox.ini)
 </details>
  
@@ -382,6 +401,8 @@ INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully
 <details>
 <summary>Ответ</summary>
 <br>  
+
+````
 [netology@dz5 vector-role]$ docker run --privileged=True -v /home/netology/vector-role:/opt/vector-role -w /opt/vector-role -it aragast/netology:latest /bin/bash
 [root@dbcca2b43785 vector-role]# tox
 py37-ansible210 installed: ansible==2.10.7,ansible-base==2.10.17,ansible-compat==1.0.0,ansible-lint==5.1.3,arrow==1.2.3,bcrypt==4.0.1,binaryornot==0.4.4,bracex==2.3.post1,cached-property==1.5.2,Cerberus==1.3.2,certifi==2023.5.7,cffi==1.15.1,chardet==5.1.0,charset-normalizer==3.2.0,click==8.1.6,click-help-colors==0.9.1,cookiecutter==2.2.3,cryptography==41.0.2,distro==1.8.0,enrich==1.2.7,idna==3.4,importlib-metadata==6.7.0,Jinja2==3.1.2,jmespath==1.0.1,lxml==4.9.3,markdown-it-py==2.2.0,MarkupSafe==2.1.3,mdurl==0.1.2,molecule==3.5.2,molecule-podman==1.1.0,packaging==23.1,paramiko==2.12.0,pathspec==0.11.1,pluggy==1.2.0,pycparser==2.21,Pygments==2.15.1,PyNaCl==1.5.0,python-dateutil==2.8.2,python-slugify==8.0.1,PyYAML==5.4.1,requests==2.31.0,rich==13.4.2,ruamel.yaml==0.17.32,ruamel.yaml.clib==0.2.7,selinux==0.2.1,six==1.16.0,subprocess-tee==0.3.5,tenacity==8.2.2,text-unidecode==1.3,typing_extensions==4.7.1,urllib3==2.0.4,wcmatch==8.4.1,yamllint==1.26.3,zipp==3.15.0
@@ -648,12 +669,14 @@ ________________________________________________________________________________
   py37-ansible210: commands succeeded
   py37-ansible30: commands succeeded
   congratulations :)
-[root@dbcca2b43785 vector-role]# 
+[root@dbcca2b43785 vector-role]#
+````   
 </details>   
  
 7. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
 <details>
 <summary>Ответ</summary>
 <br>
+ 
 [tag 1.0.4](https://github.com/tomaevmax/vector-role/releases/tag/1.0.4)   
 </details>
