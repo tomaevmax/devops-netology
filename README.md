@@ -378,25 +378,12 @@ INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully
 
 <details>
 <summary>Ответ</summary>
-<br>
-
-```
-[netology@dz5 vector-role]$ molecule init scenario centos_7 --driver-name podman
-INFO     Initializing new scenario centos_7...
-INFO     Initialized scenario in /opt/vector-role/molecule/centos_7 successfully.
-````   
-</details>   
-
-6. Пропишите правильную команду в tox.ini, чтобы запускался облегчённый сценарий.   
-
-<details>
-<summary>Ответ</summary>
 <br> 
  
 [tox.ini](https://github.com/tomaevmax/vector-role/blob/master/tox.ini)
 </details>
  
-7. Запустите команду tox. Убедитесь, что всё отработало успешно.   
+6. Запустите команду tox. Убедитесь, что всё отработало успешно.   
 
 <details>
 <summary>Ответ</summary>
