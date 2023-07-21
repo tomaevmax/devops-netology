@@ -23,7 +23,8 @@
 <summary>Ответ</summary>
 <br>
 
-screen
+![Снимок экрана 2023-07-21 в 07 52 19](https://github.com/tomaevmax/devops-netology/assets/32243921/d800c4c6-653a-455a-9282-5428e8a5d142)
+
 </details>
 
 **Шаг 5.** Напишите single task playbook и используйте module в нём.
@@ -51,7 +52,8 @@ screen
 <summary>Ответ</summary>
 <br>
 
-screen
+![Снимок экрана 2023-07-21 в 08 37 46](https://github.com/tomaevmax/devops-netology/assets/32243921/ec95bddb-8d0f-451b-a91f-16460ff6b4a5)
+
 </details>
 
 **Шаг 7.** Выйдите из виртуального окружения.
