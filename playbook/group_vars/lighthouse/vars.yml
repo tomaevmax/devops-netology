@@ -1,5 +1,0 @@
----
-lighthouse_vcs: "https://github.com/VKCOM/lighthouse"
-nginx_user_name: nginx
-lighthouse_location_dir: "home/netology/lighthouse"
-lighthouse_access_log_name: lighthouse_access
