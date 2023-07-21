@@ -52,7 +52,8 @@
 <summary>Ответ</summary>
 <br>
 
-![Снимок экрана 2023-07-21 в 08 37 46](https://github.com/tomaevmax/devops-netology/assets/32243921/ec95bddb-8d0f-451b-a91f-16460ff6b4a5)
+![Снимок экрана 2023-07-21 в 09 05 35](https://github.com/tomaevmax/devops-netology/assets/32243921/6828dc69-a627-47de-9e3c-f2aa8eb9ba43)
+
 
 </details>
 
@@ -131,7 +132,8 @@ Created collection for my_own_namespace.yandex_cloud_elk at /Users/maksimtomaev/
 <summary>Ответ</summary>
 <br>
 
-screen
+![Снимок экрана 2023-07-21 в 09 03 37](https://github.com/tomaevmax/devops-netology/assets/32243921/82847b54-6971-4282-a699-b2c28c506b44)
+
 </details>
 
 **Шаг 16.** Запустите playbook, убедитесь, что он работает.
@@ -140,7 +142,8 @@ screen
 <summary>Ответ</summary>
 <br>
 
-screen
+![Снимок экрана 2023-07-21 в 09 04 57](https://github.com/tomaevmax/devops-netology/assets/32243921/b948ad50-d468-4ac2-b523-427e4ceba123)
+
 </details>
 
 **Шаг 17.** В ответ необходимо прислать ссылки на collection и tar.gz архив, а также скриншоты выполнения пунктов 4, 6, 15 и 16.
