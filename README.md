@@ -31,8 +31,8 @@ Done -> Closed, Open.
 <details>
 <summary>Ответ</summary>
 <br>
-
-![gotovo kanban](https://github.com/tomaevmax/devops-netology/assets/32243921/67a14f38-7563-4ec4-b577-e3b1d047c00b)
+  
+![Снимок экрана 2023-07-30 в 08 56 58](https://github.com/tomaevmax/devops-netology/assets/32243921/fc7e5452-e748-480f-8b14-9aa5d41a6a82)
 </details>
 
 
@@ -52,7 +52,7 @@ Done -> Closed, Open.
 <summary>Доводим до сотояния готово</summary>
 <br>
 
-![Снимок экрана 2023-07-30 в 08 44 53](https://github.com/tomaevmax/devops-netology/assets/32243921/f19b1046-5483-49ff-b6f2-507840b92c37)
+![gotovo kanban](https://github.com/tomaevmax/devops-netology/assets/32243921/2e57903d-b57c-4424-b267-1b3f1e0c1b9f)
 </details>   
 
 Верните задачи в статус Open.   
