@@ -32,8 +32,7 @@ Done -> Closed, Open.
 <summary>Ответ</summary>
 <br>
 
-![Снимок экрана 2023-07-30 в 08 33 17](https://github.com/tomaevmax/devops-netology/assets/32243921/0167ecc4-9820-48ae-9981-ad0a5f58c667)
-
+![gotovo kanban](https://github.com/tomaevmax/devops-netology/assets/32243921/67a14f38-7563-4ec4-b577-e3b1d047c00b)
 </details>
 
 
