@@ -63,7 +63,7 @@ Done -> Closed, Open.
 <summary>Создаем задачи и таски</summary>
 <br>
 
-![Снимок экрана 2023-07-30 в 08 33 32](https://github.com/tomaevmax/devops-netology/assets/32243921/796b5268-21c9-4def-bc83-3353f7e448cd)
+![Снимок экрана 2023-07-30 в 08 45 57](https://github.com/tomaevmax/devops-netology/assets/32243921/a3f7d62e-40e2-4083-8219-61eb1a5aae10)
 </details>
 
 
