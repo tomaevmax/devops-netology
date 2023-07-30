@@ -67,5 +67,5 @@ Done -> Closed, Open.
 </details>
 
 ##  Схемы workflow   
-[bug](bug.xml)   
+[bug](Bug%20workflow.xm)   
 [task](All%20task.xml)
