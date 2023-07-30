@@ -1,6 +1,43 @@
-# Домашнее задание к занятию 6 «Создание собственных модулей»
+# Домашнее задание к занятию 7 «Жизненный цикл ПО»
 
 ## Основная часть
+
+Необходимо создать собственные workflow для двух типов задач: bug и остальные типы задач. Задачи типа bug должны проходить жизненный цикл:
+
+Open -> On reproduce.
+On reproduce -> Open, Done reproduce.
+Done reproduce -> On fix.
+On fix -> On reproduce, Done fix.
+Done fix -> On test.
+On test -> On fix, Done.
+Done -> Closed, Open.
+Остальные задачи должны проходить по упрощённому workflow:
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+![Снимок экрана 2023-07-30 в 08 56 42](https://github.com/tomaevmax/devops-netology/assets/32243921/a9d5f182-03c9-464d-b3c7-5ec76d11472c)
+
+</details>
+
+Open -> On develop.
+On develop -> Open, Done develop.
+Done develop -> On test.
+On test -> On develop, Done.
+Done -> Closed, Open.
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+![Снимок экрана 2023-07-30 в 08 56 58](https://github.com/tomaevmax/devops-netology/assets/32243921/802c98b8-bc91-49d9-8251-7340c1d72487)
+</details>
+
+
+
+
+
 
 Ваша цель — написать собственный module, который вы можете использовать в своей role через playbook. Всё это должно быть собрано в виде collection и отправлено в ваш репозиторий.
 
