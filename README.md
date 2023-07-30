@@ -32,7 +32,8 @@ Done -> Closed, Open.
 <summary>Ответ</summary>
 <br>
 
-![Снимок экрана 2023-07-30 в 08 56 58](https://github.com/tomaevmax/devops-netology/assets/32243921/802c98b8-bc91-49d9-8251-7340c1d72487)
+![Снимок экрана 2023-07-30 в 08 33 17](https://github.com/tomaevmax/devops-netology/assets/32243921/0167ecc4-9820-48ae-9981-ad0a5f58c667)
+
 </details>
 
 
