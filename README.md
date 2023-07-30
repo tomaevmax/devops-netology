@@ -49,7 +49,7 @@ Done -> Closed, Open.
 </details>   
 
 <details>
-<summary>Доводим до сотояния готово</summary>
+<summary>Доводим до соcтояния готово</summary>
 <br>
 
 ![gotovo kanban](https://github.com/tomaevmax/devops-netology/assets/32243921/2e57903d-b57c-4424-b267-1b3f1e0c1b9f)
