@@ -1,17 +1,145 @@
-# Домашнее задание к занятию 7 «Жизненный цикл ПО»   
+# Домашнее задание к занятию 9 «Процессы CI/CD»   
 
-## Основная часть   
+## Знакомоство с SonarQube   
 
-Необходимо создать собственные workflow для двух типов задач: bug и остальные типы задач. Задачи типа bug должны проходить жизненный цикл:   
-```
-Open -> On reproduce.
-On reproduce -> Open, Done reproduce.
-Done reproduce -> On fix.
-On fix -> On reproduce, Done fix.
-Done fix -> On test.
-On test -> On fix, Done.
-Done -> Closed, Open.
+1. Создайте новый проект, название произвольное.   
+2. Скачайте пакет sonar-scanner, который вам предлагает скачать SonarQube.   
+3. Сделайте так, чтобы binary был доступен через вызов в shell (или поменяйте переменную PATH, или любой другой, удобный вам способ).   
+4. Проверьте sonar-scanner --version.   
+
+<details>
+<summary>Ответ</summary>
+<br>
+
 ```   
+➜  bin git:(main) ✗ sonar-scanner --version           
+INFO: Scanner configuration file: /Users/maksimtomaev/Downloads/repa/sonar-scanner-5.0.0.2966-macosx/conf/sonar-scanner.properties
+INFO: Project root configuration file: NONE
+INFO: SonarScanner 5.0.0.2966
+INFO: Java 17.0.7 Eclipse Adoptium (64-bit)
+INFO: Mac OS X 13.4.1 x86_64
+```   
+</details>  
+
+5. Запустите анализатор против кода из директории example с дополнительным ключом -Dsonar.coverage.exclusions=fail.py.   
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+```   
+➜  example git:(ansible-dz8) ✗ sonar-scanner \                   
+  -Dsonar.projectKey=netology \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://51.250.10.132:9000 \
+  -Dsonar.login=7af1a240a114278695a6c26f20eee74b491f063d \
+-Dsonar.coverage.exclusions=fail.py
+INFO: Scanner configuration file: /Users/maksimtomaev/Downloads/repa/sonar-scanner-5.0.0.2966-macosx/conf/sonar-scanner.properties
+INFO: Project root configuration file: NONE
+INFO: SonarScanner 5.0.0.2966
+INFO: Java 17.0.7 Eclipse Adoptium (64-bit)
+INFO: Mac OS X 13.4.1 x86_64
+INFO: User cache: /Users/maksimtomaev/.sonar/cache
+INFO: Analyzing on SonarQube server 9.1.0
+INFO: Default locale: "ru_RU", source code encoding: "UTF-8" (analysis is platform dependent)
+INFO: Load global settings
+INFO: Load global settings (done) | time=211ms
+INFO: Server id: 9CFC3560-AYm5hNCKM9IJLEz2jvVa
+INFO: User cache: /Users/maksimtomaev/.sonar/cache
+INFO: Load/download plugins
+INFO: Load plugins index
+INFO: Load plugins index (done) | time=88ms
+INFO: Load/download plugins (done) | time=19298ms
+INFO: Process project properties
+INFO: Process project properties (done) | time=14ms
+INFO: Execute project builders
+INFO: Execute project builders (done) | time=5ms
+INFO: Project key: netology
+INFO: Base dir: /Users/maksimtomaev/Downloads/repa/devops-netology/example
+INFO: Working dir: /Users/maksimtomaev/Downloads/repa/devops-netology/example/.scannerwork
+INFO: Load project settings for component key: 'netology'
+INFO: Load project settings for component key: 'netology' (done) | time=85ms
+INFO: Load quality profiles
+INFO: Load quality profiles (done) | time=157ms
+INFO: Load active rules
+INFO: Load active rules (done) | time=3421ms
+INFO: Indexing files...
+INFO: Project configuration:
+INFO:   Excluded sources for coverage: fail.py
+INFO: 1 file indexed
+INFO: 0 files ignored because of scm ignore settings
+INFO: Quality profile for py: Sonar way
+INFO: ------------- Run sensors on module netology
+INFO: Load metrics repository
+INFO: Load metrics repository (done) | time=114ms
+INFO: Sensor Python Sensor [python]
+WARN: Your code is analyzed as compatible with python 2 and 3 by default. This will prevent the detection of issues specific to python 2 or python 3. You can get a more precise analysis by setting a python version in your configuration via the parameter "sonar.python.version"
+INFO: Starting global symbols computation
+INFO: 1 source file to be analyzed
+INFO: Load project repositories
+INFO: Load project repositories (done) | time=61ms
+INFO: 1/1 source file has been analyzed
+INFO: Starting rules execution
+INFO: 1 source file to be analyzed
+INFO: 1/1 source file has been analyzed
+INFO: Sensor Python Sensor [python] (done) | time=690ms
+INFO: Sensor Cobertura Sensor for Python coverage [python]
+INFO: Sensor Cobertura Sensor for Python coverage [python] (done) | time=5ms
+INFO: Sensor PythonXUnitSensor [python]
+INFO: Sensor PythonXUnitSensor [python] (done) | time=1ms
+INFO: Sensor CSS Rules [cssfamily]
+INFO: No CSS, PHP, HTML or VueJS files are found in the project. CSS analysis is skipped.
+INFO: Sensor CSS Rules [cssfamily] (done) | time=1ms
+INFO: Sensor JaCoCo XML Report Importer [jacoco]
+INFO: 'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+INFO: No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+INFO: Sensor JaCoCo XML Report Importer [jacoco] (done) | time=3ms
+INFO: Sensor C# Project Type Information [csharp]
+INFO: Sensor C# Project Type Information [csharp] (done) | time=1ms
+INFO: Sensor C# Analysis Log [csharp]
+INFO: Sensor C# Analysis Log [csharp] (done) | time=10ms
+INFO: Sensor C# Properties [csharp]
+INFO: Sensor C# Properties [csharp] (done) | time=0ms
+INFO: Sensor JavaXmlSensor [java]
+INFO: Sensor JavaXmlSensor [java] (done) | time=1ms
+INFO: Sensor HTML [web]
+INFO: Sensor HTML [web] (done) | time=2ms
+INFO: Sensor VB.NET Project Type Information [vbnet]
+INFO: Sensor VB.NET Project Type Information [vbnet] (done) | time=1ms
+INFO: Sensor VB.NET Analysis Log [vbnet]
+INFO: Sensor VB.NET Analysis Log [vbnet] (done) | time=8ms
+INFO: Sensor VB.NET Properties [vbnet]
+INFO: Sensor VB.NET Properties [vbnet] (done) | time=0ms
+INFO: ------------- Run sensors on project
+INFO: Sensor Zero Coverage Sensor
+INFO: Sensor Zero Coverage Sensor (done) | time=0ms
+INFO: SCM Publisher SCM provider for this project is: git
+INFO: SCM Publisher 1 source file to be analyzed
+INFO: SCM Publisher 0/1 source files have been analyzed (done) | time=93ms
+WARN: Missing blame information for the following files:
+WARN:   * fail.py
+WARN: This may lead to missing/broken features in SonarQube
+INFO: CPD Executor Calculating CPD for 1 file
+INFO: CPD Executor CPD calculation finished (done) | time=7ms
+INFO: Analysis report generated in 93ms, dir size=103,2 kB
+INFO: Analysis report compressed in 22ms, zip size=14,3 kB
+INFO: Analysis report uploaded in 100ms
+INFO: ANALYSIS SUCCESSFUL, you can browse http://51.250.10.132:9000/dashboard?id=netology
+INFO: Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+INFO: More about the report processing at http://51.250.10.132:9000/api/ce/task?id=AYm5mqpaM9IJLEz2j0ah
+INFO: Analysis total time: 7.162 s
+INFO: ------------------------------------------------------------------------
+INFO: EXECUTION SUCCESS
+INFO: ------------------------------------------------------------------------
+INFO: Total time: 35.836s
+INFO: Final Memory: 8M/40M
+INFO: ------------------------------------------------------------------------
+
+```   
+</details>  
+
+6. Посмотрите результат в интерфейсе.   
+
 <details>
 <summary>Ответ</summary>
 <br>
@@ -20,52 +148,14 @@ Done -> Closed, Open.
 
 </details>   
 
-Остальные задачи должны проходить по упрощённому workflow:   
-```
-Open -> On develop.
-On develop -> Open, Done develop.
-Done develop -> On test.
-On test -> On develop, Done.
-Done -> Closed, Open.
-```   
+7. Исправьте ошибки, которые он выявил, включая warnings.   
+8. Запустите анализатор повторно — проверьте, что QG пройдены успешно.   
+9. Сделайте скриншот успешного прохождения анализа, приложите к решению ДЗ.   
+
 <details>
 <summary>Ответ</summary>
 <br>
-  
-![Снимок экрана 2023-07-30 в 08 56 58](https://github.com/tomaevmax/devops-netology/assets/32243921/fc7e5452-e748-480f-8b14-9aa5d41a6a82)
-</details>
 
+![Снимок экрана 2023-07-30 в 08 56 42](https://github.com/tomaevmax/devops-netology/assets/32243921/a9d5f182-03c9-464d-b3c7-5ec76d11472c)
 
-##  Что нужно сделать
-
-Создайте задачу с типом bug, попытайтесь провести его по всему workflow до Done.   
-Создайте задачу с типом epic, к ней привяжите несколько задач с типом task, проведите их по всему workflow до Done.   
-При проведении обеих задач по статусам используйте kanban.   
-<details>
-<summary>Создаем задачи и таски</summary>
-<br>
-
-![Снимок экрана 2023-07-30 в 08 33 32](https://github.com/tomaevmax/devops-netology/assets/32243921/796b5268-21c9-4def-bc83-3353f7e448cd)
 </details>   
-
-<details>
-<summary>Доводим до соcтояния готово</summary>
-<br>
-
-![gotovo kanban](https://github.com/tomaevmax/devops-netology/assets/32243921/2e57903d-b57c-4424-b267-1b3f1e0c1b9f)
-</details>   
-
-Верните задачи в статус Open.   
-Перейдите в Scrum, запланируйте новый спринт, состоящий из задач эпика и одного бага, стартуйте спринт, проведите задачи до состояния Closed. Закройте спринт.   
-Если всё отработалось в рамках ожидания — выгрузите схемы workflow для импорта в XML. Файлы с workflow и скриншоты workflow приложите к решению задания.   
-
-<details>
-<summary>Отчет по спринту</summary>
-<br>
-
-![Снимок экрана 2023-07-30 в 08 45 57](https://github.com/tomaevmax/devops-netology/assets/32243921/a3f7d62e-40e2-4083-8219-61eb1a5aae10)
-</details>
-
-##  Схемы workflow   
-[bug](Bug%20workflow.xml)   
-[task](All%20task.xml)
