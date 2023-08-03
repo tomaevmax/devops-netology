@@ -144,7 +144,7 @@ INFO: ------------------------------------------------------------------------
 <summary>Ответ</summary>
 <br>
 
-![Снимок экрана 2023-07-30 в 08 56 42](https://github.com/tomaevmax/devops-netology/assets/32243921/a9d5f182-03c9-464d-b3c7-5ec76d11472c)
+![Снимок экрана 2023-08-03 в 07 20 05](https://github.com/tomaevmax/devops-netology/assets/32243921/1f04d585-5914-4026-95ea-0f1789cac55c)
 
 </details>   
 
@@ -156,6 +156,6 @@ INFO: ------------------------------------------------------------------------
 <summary>Ответ</summary>
 <br>
 
-![Снимок экрана 2023-07-30 в 08 56 42](https://github.com/tomaevmax/devops-netology/assets/32243921/a9d5f182-03c9-464d-b3c7-5ec76d11472c)
+![Снимок экрана 2023-08-03 в 07 27 04](https://github.com/tomaevmax/devops-netology/assets/32243921/b008087d-367c-4775-90c1-89f1ffc21386)
 
 </details>   
