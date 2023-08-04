@@ -159,3 +159,68 @@ INFO: ------------------------------------------------------------------------
 ![Снимок экрана 2023-08-03 в 07 27 04](https://github.com/tomaevmax/devops-netology/assets/32243921/b008087d-367c-4775-90c1-89f1ffc21386)
 
 </details>   
+
+## Знакомство с Nexus   
+
+1. В репозиторий maven-public загрузите артефакт с GAV-параметрами:   
+ groupId: netology;   
+ artifactId: java;   
+ version: 8_282;  
+ classifier: distrib;   
+ type: tar.gz.   
+2. В него же загрузите такой же артефакт, но с version: 8_102.   
+3. Проверьте, что все файлы загрузились успешно.   
+4. В ответе пришлите файл maven-metadata.xml для этого артефекта.   
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+[maven-metadate](maven-metadata.xml)   
+</details>  
+
+##  Знакомство с Maven
+
+1. Поменяйте в pom.xml блок с зависимостями под ваш артефакт из первого пункта задания для Nexus (java с версией 8_282).
+2. Запустите команду mvn package в директории с pom.xml, ожидайте успешного окончания.
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+````
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /Users/maksimtomaev/Downloads/repa/devops-netology/mvn/target/simple-app-1.0-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.079 s
+[INFO] Finished at: 2023-08-04T06:54:55+03:00
+[INFO] ------------------------------------------------------------------------
+
+````   
+
+</details>   
+
+3. Проверьте директорию ~/.m2/repository/, найдите ваш артефакт.
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+````
+➜  mvn git:(ansible-dz8) ✗ ls ~/.m2/repository/netology/java/8_282 
+_remote.repositories        java-8_282-distrib.jar      java-8_282-distrib.jar.sha1 java-8_282.pom.lastUpdated
+
+````   
+
+</details>  
+
+4. В ответе пришлите исправленный файл pom.xml.   
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+[pom.xml](mvn/pom.xml)   
+</details>  
