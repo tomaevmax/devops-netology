@@ -36,7 +36,16 @@
 
 </details>  
 
-7. Поменяйте условия сборки: если сборка по ветке master, то должен происходит mvn clean deploy, иначе mvn clean test.   
+4. Поменяйте условия сборки: если сборка по ветке master, то должен происходит mvn clean deploy, иначе mvn clean test.
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+![Снимок экрана 2023-08-16 в 06 48 41](https://github.com/tomaevmax/devops-netology/assets/32243921/da652775-fc05-41d1-832b-c6fcb5ea9f13)
+
+</details>  
+
 8. Для deploy будет необходимо загрузить settings.xml в набор конфигураций maven у teamcity, предварительно записав туда креды для подключения к nexus.   
 9. В pom.xml необходимо поменять ссылки на репозиторий и nexus.   
 10. Запустите сборку по master, убедитесь, что всё прошло успешно и артефакт появился в nexus.   
