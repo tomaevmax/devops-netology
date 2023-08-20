@@ -267,11 +267,5 @@ Job succeeded
 </details>  
 
 
-## Итог
-
-В качестве ответа пришлите подробные скриншоты по каждому пункту задания:
-
-файл gitlab-ci.yml;
-Dockerfile;
-лог успешного выполнения пайплайна;
-решённый Issue.
+файл [gitlab-ci.yml](gitlab-ci.yml);
+[Dockerfile](Dockerfile);
