@@ -267,5 +267,5 @@ Job succeeded
 </details>  
 
 
-файл [gitlab-ci.yml](gitlab-ci.yml);
-[Dockerfile](Dockerfile);
+файл [gitlab-ci.yml](gitlab-ci.yml)   
+[Dockerfile](Dockerfile)   
