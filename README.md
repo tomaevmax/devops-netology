@@ -1,4 +1,4 @@
-# Домашнее задание к занятию 11 «Teamcity»   
+# Домашнее задание к занятию 12 «GitLab»
 
 ## Основная часть   
 
@@ -18,6 +18,10 @@ Python версии не ниже 3.7.
 <details>
 <summary>Ответ</summary>
 <br>
+
+![Снимок экрана 2023-08-20 в 07 34 21](https://github.com/tomaevmax/devops-netology/assets/32243921/61a1162b-b6e2-4fef-99b6-ba25debaf480)   
+
+![Снимок экрана 2023-08-20 в 07 35 03](https://github.com/tomaevmax/devops-netology/assets/32243921/eaf81453-c8a8-4c06-9393-1685495c8e8c)
 
 
 </details>  
