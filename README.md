@@ -93,6 +93,7 @@ P.S.: если при запуске некоторые контейнеры б�
 <details>
 <summary>Ответ</summary>
 <br>
- 
+
+ ![Снимок экрана 2023-08-31 в 07 35 40](https://github.com/tomaevmax/devops-netology/assets/32243921/9afe69fb-bc23-428e-b1de-f2394dae8507)
 
 </details>  
