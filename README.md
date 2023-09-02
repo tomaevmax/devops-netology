@@ -12,7 +12,8 @@
 <summary>Ответ</summary>
 <br>
 
-screen
+
+![Снимок экрана 2023-09-02 в 15 45 51](https://github.com/tomaevmax/devops-netology/assets/32243921/7fedd8bb-39d8-447b-8944-516c102c4125)
 
 
 </details>  
@@ -49,6 +50,8 @@ node_memory_MemFree_bytes / (1024 * 1024)
 node_filesystem_free_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} / (1024 * 1024 *1024)
 ```` 
 
+![Снимок экрана 2023-09-02 в 15 18 12](https://github.com/tomaevmax/devops-netology/assets/32243921/7978cd3e-3c8b-4a1e-ba74-b04060dd6dca)
+
 </details>  
 
 ## Задание 3   
@@ -59,7 +62,8 @@ node_filesystem_free_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} / (1024 * 1
 <summary>Ответ</summary>
 <br>
  
-screen
+![Снимок экрана 2023-09-02 в 15 47 48](https://github.com/tomaevmax/devops-netology/assets/32243921/d1a28a77-e3b1-4056-b568-5934de3e8a7f)
+
 
 </details>  
 
