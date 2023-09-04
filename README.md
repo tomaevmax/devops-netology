@@ -25,8 +25,10 @@ docker-compose манифест (если вы не использовали д�
 <summary>Ответ</summary>
 <br>
 
+![Снимок экрана 2023-09-04 в 06 47 08](https://github.com/tomaevmax/devops-netology/assets/32243921/9bc9c8fd-ba31-4217-908f-43dfee3582b5)
 
-![Снимок экрана 2023-09-02 в 15 45 51](https://github.com/tomaevmax/devops-netology/assets/32243921/7fedd8bb-39d8-447b-8944-516c102c4125)
+
+![Снимок экрана 2023-09-04 в 06 37 17](https://github.com/tomaevmax/devops-netology/assets/32243921/c28ceffa-89bc-4948-bb52-e3ad3f4e9c15)
 
 
 </details>  
@@ -45,6 +47,7 @@ docker-compose манифест (если вы не использовали д�
 <br>
 
 
-![Снимок экрана 2023-09-02 в 15 18 12](https://github.com/tomaevmax/devops-netology/assets/32243921/7978cd3e-3c8b-4a1e-ba74-b04060dd6dca)
+![Снимок экрана 2023-09-04 в 06 47 50](https://github.com/tomaevmax/devops-netology/assets/32243921/fe3c065a-bdb6-4865-ab53-9dcd58c6d126)
+
 
 </details>
