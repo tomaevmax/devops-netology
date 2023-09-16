@@ -20,7 +20,7 @@ Free Cloud account имеет ограничения:
 <summary>Ответ</summary>
 <br>
 
-screen 1   
+  ![Снимок экрана 2023-09-16 в 07 16 44](https://github.com/tomaevmax/devops-netology/assets/32243921/93226cfa-ca42-4a14-a358-37872fa7a0cc)   
 
 </details>  
 
