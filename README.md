@@ -2,13 +2,26 @@
 
 ## ЗЗадание 1. Установка MicroK8S    
 
-1. Установить MicroK8S на локальную машину или на удалённую виртуальную машину.   
+1. Установить MicroK8S на локальную машину или на удалённую виртуальную машину.
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+Установку произвел на Mac OS по инструкции: https://microk8s.io/docs/install-macos    
+![Снимок экрана 2023-10-27 в 06 52 25](https://github.com/tomaevmax/devops-netology/assets/32243921/37cfd07e-1a70-43e3-ac87-b8fa40336068)
+
+
+</details>   
+
 2. Установить dashboard.   
 3. Сгенерировать сертификат для подключения к внешнему ip-адресу.   
 
 <details>
 <summary>Ответ</summary>
 <br>
+
+Установку произвел на Mac OS по инструкции: https://microk8s.io/docs/install-macos    
 
 
 </details>    
