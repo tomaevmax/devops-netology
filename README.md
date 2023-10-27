@@ -14,7 +14,18 @@
 
 </details>   
 
-2. Установить dashboard.   
+2. Установить dashboard.
+
+<details>
+<summary>Ответ</summary>
+<br>
+
+Установку выполняем с помощью команды microk8s enable dashboard   
+
+![Снимок экрана 2023-10-27 в 06 57 52](https://github.com/tomaevmax/devops-netology/assets/32243921/cddbe6db-8478-4eb8-af56-a2e83c5698e1)
+
+</details>  
+
 3. Сгенерировать сертификат для подключения к внешнему ip-адресу.   
 
 <details>
