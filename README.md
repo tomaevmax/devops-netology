@@ -81,13 +81,48 @@ Restarting service kubelite.
 
 ## Задание 2. Установка и настройка локального kubectl    
 
-1. Установить на локальную машину kubectl.   
-2. Настроить локально подключение к кластеру.   
-3. Подключиться к дашборду с помощью port-forward.     
+1. Установить на локальную машину kubectl.
 
 <details>
 <summary>Ответ</summary>
 <br>
 
+````
+netology@microk8s:/var/snap/microk8s/current$ sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/`sudo curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 47.5M  100 47.5M    0     0  19.9M      0  0:00:02  0:00:02 --:--:-- 19.9M
+netology@microk8s:/var/snap/microk8s/current$ sudo chmod +x ./kubectl
+netology@microk8s:/var/snap/microk8s/current$ sudo mv ./kubectl /usr/local/bin/kubectl
+netology@microk8s:/var/snap/microk8s/current$ echo "source <(kubectl completion bash)" >> ~/.bashrc
+netology@microk8s:/var/snap/microk8s/current$ source <(kubectl completion bash)
+
+````   
+</details>    
+
+2. Настроить локально подключение к кластеру.
+
+<details>
+<summary>Ответ</summary>
+<br>   
+
+````   
+netology@microk8s:~$ sudo microk8s config > .kube/config
+netology@microk8s:~$ kubectl get pods
+No resources found in default namespace.   
+````   
+</details>   
+
+3. Подключиться к дашборду с помощью port-forward.     
+
+<details>
+<summary>Ответ</summary>
+<br>   
+  
+````   
+netology@microk8s:~$ sudo microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0
+Forwarding from 0.0.0.0:10443 -> 8443
+````
+![Снимок экрана 2023-10-28 в 11 16 16](https://github.com/tomaevmax/devops-netology/assets/32243921/c96c0d20-50ce-4cf1-acf7-08a3aa8429b3)
 
 </details>    
