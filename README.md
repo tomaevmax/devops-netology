@@ -122,7 +122,7 @@ Handling connection for 8888
 {"host":{"hostname":"158.160.112.205","ip":"::ffff:127.0.0.1","ips":[]},"http":{"method":"GET","baseUrl":"","originalUrl":"/","protocol":"http"},"request":{"params":{"0":"/"},"query":{},"cookies":{},"body":{},"headers":{"host":"158.160.112.205:8888","user-agent":"curl/8.1.2","accept":"*/*"}},"environment":{"PATH":"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","HOSTNAME":"netology-web","NODE_VERSION":"18.18.2","YARN_VERSION":"1.22.19","NETOLOGY_SVC_PORT_80_TCP_ADDR":"10.152.183.240","KUBERNETES_SERVICE_HOST":"10.152.183.1","KUBERNETES_PORT_443_TCP_PROTO":"tcp","KUBERNETES_PORT_443_TCP_ADDR":"10.152.183.1","NETOLOGY_SVC_SERVICE_HOST":"10.152.183.240","NETOLOGY_SVC_PORT_80_TCP_PROTO":"tcp","NETOLOGY_SVC_PORT_80_TCP_PORT":"80","KUBERNETES_SERVICE_PORT_HTTPS":"443","NETOLOGY_SVC_SERVICE_PORT":"80","NETOLOGY_SVC_PORT":"tcp://10.152.183.240:80","KUBERNETES_SERVICE_PORT":"443","KUBERNETES_PORT_443_TCP":"tcp://10.152.183.1:443","NETOLOGY_SVC_PORT_80_TCP":"tcp://10.152.183.240:80","KUBERNETES_PORT":"tcp://10.152.183.1:443","KUBERNETES_PORT_443_TCP_PORT":"443","HOME":"/root"}}%  
 ````   
 
-![Снимок экрана 2023-10-28 в 11 16 16](https://github.com/tomaevmax/devops-netology/assets/32243921/0194aa82-e76f-464d-92d9-45c7ff766302)
+![Снимок экрана 2023-10-30 в 21 04 38](https://github.com/tomaevmax/devops-netology/assets/32243921/54178d56-f68e-4436-b2e4-9b4986723cb5)
 
 </details>  
 
