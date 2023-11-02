@@ -1,148 +1,157 @@
-# Домашнее задание к занятию «Запуск приложений в K8S»
+# Домашнее задание к занятию «Сетевое взаимодействие в K8S. Часть 1»
 
-### Задание 1. Создать Deployment и обеспечить доступ к репликам приложения из другого Pod
+### Задание 1. Создать Deployment и обеспечить доступ к контейнерам приложения по разным портам из другого Pod внутри кластера
 
-1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool. Решить возникшую ошибку.
-2. После запуска увеличить количество реплик работающего приложения до 2.
+1. Создать Deployment приложения, состоящего из двух контейнеров (nginx и multitool), с количеством реплик 3 шт.
+2. Создать Service, который обеспечит доступ внутри кластера до контейнеров приложения из п.1 по порту 9001 — nginx 80, по 9002 — multitool 8080.
+3. Создать отдельный Pod с приложением multitool и убедиться с помощью `curl`, что из пода есть доступ до приложения из п.1 по разным портам в разные контейнеры.
+4. Продемонстрировать доступ с помощью `curl` по доменному имени сервиса.
+5. Предоставить манифесты Deployment и Service в решении, а также скриншоты или вывод команды п.4.
+
 <details>
 <summary>Ответ</summary>
 <br>   
 
-[deployment](/deployment.yaml)
+[deployment](/deployment.yaml)   
+[service](/service.yaml)   
 
-</details>   
-
-3. Продемонстрировать количество подов до и после масштабирования.   
-<details>
-<summary>Ответ</summary>
-<br>
-
-````   
-netology@microk8s:~/k8s$ kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-6b7c9d4fc6-m5s5p   2/2     Running   0          2m13s
-netology@microk8s:~/k8s$ vim deployment.yaml 
-netology@microk8s:~/k8s$ kubectl apply -f deployment.yaml 
-deployment.apps/nginx-deployment configured
-netology@microk8s:~/k8s$ kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-6b7c9d4fc6-m5s5p   2/2     Running   0          2m45s
-nginx-deployment-6b7c9d4fc6-sprlk   2/2     Running   0          4s
-
-````   
-
-</details>   
-
-4. Создать Service, который обеспечит доступ до реплик приложений из п.1.   
-<details>
-<summary>Ответ</summary>
-<br>
-
-[service](/service.yaml)  
-
-````   
-netology@microk8s:~/k8s$ kubectl get svc
-NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
-kubernetes         ClusterIP   10.152.183.1     <none>        443/TCP           22m
-nginx-deployment   ClusterIP   10.152.183.228   <none>        80/TCP,1180/TCP   49s
-````   
-
-</details>  
-
-5. Создать отдельный Pod с приложением multitool и убедиться с помощью `curl`, что из пода есть доступ до приложений из п.1.   
-<details>
-<summary>Ответ</summary>
-<br>
-
-````   
-netology@microk8s:~/k8s$ kubectl run mycurlpod --image=curlimages/curl -i --tty --rm -- sh
+````
+netology@microk8s:~/k8s$ kubectl run mycurlpod --image=wbitt/network-multitool -i --tty --rm -- sh
 If you don't see a command prompt, try pressing enter.
-~ $ curl nginx-deployment:80 -I
-HTTP/1.1 200 OK
-Server: nginx/1.14.2
-Date: Wed, 01 Nov 2023 04:14:07 GMT
-Content-Type: text/html
-Content-Length: 612
-Last-Modified: Tue, 04 Dec 2018 14:44:49 GMT
-Connection: keep-alive
-ETag: "5c0692e1-264"
-Accept-Ranges: bytes
+/ # curl -v nginx-service:9001
+* processing: nginx-service:9001
+*   Trying 10.152.183.208:9001...
+* Connected to nginx-service (10.152.183.208) port 9001
+> GET / HTTP/1.1
+> Host: nginx-service:9001
+> User-Agent: curl/8.2.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: nginx/1.14.2
+< Date: Thu, 02 Nov 2023 03:48:43 GMT
+< Content-Type: text/html
+< Content-Length: 612
+< Last-Modified: Tue, 04 Dec 2018 14:44:49 GMT
+< Connection: keep-alive
+< ETag: "5c0692e1-264"
+< Accept-Ranges: bytes
+< 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
 
-~ $ curl nginx-deployment:1180 -I
-HTTP/1.1 200 OK
-Server: nginx/1.24.0
-Date: Wed, 01 Nov 2023 04:14:15 GMT
-Content-Type: text/html
-Content-Length: 154
-Last-Modified: Wed, 01 Nov 2023 04:06:10 GMT
-Connection: keep-alive
-ETag: "6541ceb2-9a"
-Accept-Ranges: bytes
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+* Connection #0 to host nginx-service left intact
+/ # curl -v nginx-service:9002
+* processing: nginx-service:9002
+*   Trying 10.152.183.208:9002...
+* Connected to nginx-service (10.152.183.208) port 9002
+> GET / HTTP/1.1
+> Host: nginx-service:9002
+> User-Agent: curl/8.2.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: nginx/1.24.0
+< Date: Thu, 02 Nov 2023 03:49:01 GMT
+< Content-Type: text/html
+< Content-Length: 154
+< Last-Modified: Thu, 02 Nov 2023 03:45:06 GMT
+< Connection: keep-alive
+< ETag: "65431b42-9a"
+< Accept-Ranges: bytes
+< 
+WBITT Network MultiTool (with NGINX) - nginx-deployment-86b589886b-4xqxx - 10.1.128.199 - HTTP: 8080 , HTTPS: 11443 . (Formerly praqma/network-multitool)
+* Connection #0 to host nginx-service left intact
 
 ````   
+
 </details>  
+
 
 ------
 
-### Задание 2. Создать Deployment и обеспечить старт основного контейнера при выполнении условий
+### Задание 2. Создать Service и обеспечить доступ к приложениям снаружи кластера
 
-1. Создать Deployment приложения nginx и обеспечить старт контейнера только после того, как будет запущен сервис этого приложения.
+1. Создать отдельный Service приложения из Задания 1 с возможностью доступа снаружи кластера к nginx, используя тип NodePort.   
+2. Продемонстрировать доступ с помощью браузера или `curl` с локального компьютера.   
+3. Предоставить манифест и Service в решении, а также скриншоты или вывод команды п.2.   
+
 <details>
 <summary>Ответ</summary>
-<br>
+<br>   
 
-[deployment_init](/deployment_init.yaml)  
+[service_node](/service_node.yaml)   
 
-</details>   
+````  
+devops-netology git:(k8s_dz4) ✗ curl -v 158.160.3.88:30080
+*   Trying 158.160.3.88:30080...
+* Connected to 158.160.3.88 (158.160.3.88) port 30080 (#0)
+> GET / HTTP/1.1
+> Host: 158.160.3.88:30080
+> User-Agent: curl/8.1.2
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: nginx/1.14.2
+< Date: Thu, 02 Nov 2023 03:53:00 GMT
+< Content-Type: text/html
+< Content-Length: 612
+< Last-Modified: Tue, 04 Dec 2018 14:44:49 GMT
+< Connection: keep-alive
+< ETag: "5c0692e1-264"
+< Accept-Ranges: bytes
+< 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
 
-2. Убедиться, что nginx не стартует. В качестве Init-контейнера взять busybox.   
-<details>
-<summary>Ответ</summary>
-<br>
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+* Connection #0 to host 158.160.3.88 left intact
 
 ````   
-netology@microk8s:~/k8s$ kubectl -n netology get pods
-NAME                          READY   STATUS     RESTARTS   AGE
-nginx-init-6b9c967fdc-fxw4g   0/1     Init:0/1   0          13s
 
-````   
-
-</details>  
-
-3. Создать и запустить Service. Убедиться, что Init запустился.   
-<details>
-<summary>Ответ</summary>
-<br>
-
-[service_init](/service_init.yaml)  
-````   
-netology@microk8s:~/k8s$ kubectl -n netology apply -f service_init.yaml 
-service/nginx-init created
-
-````   
-
-</details>  
-
-4. Продемонстрировать состояние пода до и после запуска сервиса.   
-<details>
-<summary>Ответ</summary>
-<br>
-
-````   
-netology@microk8s:~/k8s$ kubectl -n netology create -f deployment_init.yaml 
-deployment.apps/nginx-init created
-netology@microk8s:~/k8s$ kubectl -n netology get pods
-NAME                          READY   STATUS     RESTARTS   AGE
-nginx-init-6b9c967fdc-fxw4g   0/1     Init:0/1   0          13s
-netology@microk8s:~/k8s$ kubectl -n netology apply -f service_init.yaml 
-service/nginx-init created
-netology@microk8s:~/k8s$ kubectl -n netology get pods
-NAME                          READY   STATUS    RESTARTS   AGE
-nginx-init-6b9c967fdc-fxw4g   1/1     Running   0          68s
-
-````
-
-</details>  
-
+</details> 
 
 ------
