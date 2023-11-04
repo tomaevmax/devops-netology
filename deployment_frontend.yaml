@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: frontend
   labels:
     app: nginx
 spec:
@@ -19,10 +19,3 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
-      - name: multitool
-        image: wbitt/network-multitool
-        env:
-          - name: HTTP_PORT
-            value: "8080"
-          - name: HTTPS_PORT
-            value: "11443"
