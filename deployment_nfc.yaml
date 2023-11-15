@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nfs
+  template:
+    metadata:
+      labels:
+        app: my-nfs
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        env:
+          - name: HTTP_PORT
+            value: "8082"
+          - name: HTTPS_PORT
+            value: "445"
+        volumeMounts:
+          - name: volume-nfs
+            mountPath: /share
+      volumes:
+      - name: volume-nfs
+        persistentVolumeClaim:
+          claimName: mynfs

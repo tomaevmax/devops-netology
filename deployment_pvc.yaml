@@ -16,9 +16,10 @@ spec:
     spec:
       volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: mydata
       containers:
-      - name: init-share
+      - name: busybox/op
         image: busybox:1.28
         command: ['sh', '-c', 'while true; do echo Success! >> /opt/success.txt; sleep 5; done' ]
         volumeMounts:
