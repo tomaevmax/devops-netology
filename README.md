@@ -1,149 +1,12 @@
-# Домашнее задание к занятию «Конфигурация приложений»
+# Домашнее задание к занятию «Управление доступом»
 
- 
-### Задание 1. Создать Deployment приложения и решить возникшую проблему с помощью ConfigMap. Добавить веб-страницу
+### Задание 1. Создайте конфигурацию для подключения пользователя
 
-1. Создать Deployment приложения, состоящего из контейнеров nginx и multitool.
-2. Решить возникшую проблему с помощью ConfigMap.
-3. Продемонстрировать, что pod стартовал и оба конейнера работают.
-4. Сделать простую веб-страницу и подключить её к Nginx с помощью ConfigMap. Подключить Service и показать вывод curl или в браузере.
-5. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
-
-<details>
-<summary>Ответ</summary>
-<br>   
-
-[deployment_confimap](/deployment_confimap.yaml)   
-[configmap](/configmap.yaml)   
-[configmap_nginx](/configmap_nginx.yaml)   
-[service](/service.yaml)  
-
-````  
-netology@microk8s:~/k8s$ kubectl get pods
-NAME                      READY   STATUS    RESTARTS   AGE
-custom-86f46b4758-g546t   2/2     Running   0          6m20s
-
-netology@microk8s:~/k8s$ kubectl describe pods custom-86f46b4758-g546t
-Name:             custom-86f46b4758-g546t
-Namespace:        default
-Priority:         0
-Service Account:  default
-Node:             microk8s/10.129.0.8
-Start Time:       Sat, 18 Nov 2023 04:45:08 +0000
-Labels:           app=nginx
-                  pod-template-hash=86f46b4758
-Annotations:      cni.projectcalico.org/containerID: 39563fcd730ec40ff9773d642971faf3d37cee9a126c8c12349aa8ce705a8fa7
-                  cni.projectcalico.org/podIP: 10.1.128.200/32
-                  cni.projectcalico.org/podIPs: 10.1.128.200/32
-Status:           Running
-IP:               10.1.128.200
-IPs:
-  IP:           10.1.128.200
-Controlled By:  ReplicaSet/custom-86f46b4758
-Containers:
-  nginx:
-    Container ID:   containerd://039ba9adca7c00903509c7f27ecb52b2f31454a0b3ae51fc5b99e696668ace2e
-    Image:          nginx:1.14.2
-    Image ID:       docker.io/library/nginx@sha256:f7988fb6c02e0ce69257d9bd9cf37ae20a60f1df7563c3a2a6abe24160306b8d
-    Port:           80/TCP
-    Host Port:      0/TCP
-    State:          Running
-      Started:      Sat, 18 Nov 2023 04:45:09 +0000
-    Ready:          True
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /usr/share/nginx/html from content (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-98dw7 (ro)
-  multitool:
-    Container ID:   containerd://e3a41952a6c49624e711cda0743d5bbecaa46bd636f0d88b1e9958bda20d18ec
-    Image:          wbitt/network-multitool
-    Image ID:       docker.io/wbitt/network-multitool@sha256:d1137e87af76ee15cd0b3d4c7e2fcd111ffbd510ccd0af076fc98dddfc50a735
-    Port:           <none>
-    Host Port:      <none>
-    State:          Running
-      Started:      Sat, 18 Nov 2023 04:45:11 +0000
-    Ready:          True
-    Restart Count:  0
-    Environment:
-      HTTP_PORT:   <set to the key 'http_port' of config map 'multitool-port'>   Optional: false
-      HTTPS_PORT:  <set to the key 'https_port' of config map 'multitool-port'>  Optional: false
-    Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-98dw7 (ro)
-Conditions:
-  Type              Status
-  Initialized       True 
-  Ready             True 
-  ContainersReady   True 
-  PodScheduled      True 
-Volumes:
-  content:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      nginx-content
-    Optional:  false
-  kube-api-access-98dw7:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   BestEffort
-Node-Selectors:              <none>
-Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:                      <none>
-netology@microk8s:~/k8s$ 
-
-
-
-````   
-
-Вызов тестовой страницы   
-
-````   
-netology@microk8s:~$ curl -v localhost:8080
-*   Trying 127.0.0.1:8080...
-* Connected to localhost (127.0.0.1) port 8080 (#0)
-> GET / HTTP/1.1
-> Host: localhost:8080
-> User-Agent: curl/7.81.0
-> Accept: */*
-> 
-* Mark bundle as not supporting multiuse
-< HTTP/1.1 200 OK
-< Server: nginx/1.14.2
-< Date: Sat, 18 Nov 2023 04:49:27 GMT
-< Content-Type: text/html
-< Content-Length: 68
-< Last-Modified: Sat, 18 Nov 2023 04:45:08 GMT
-< Connection: keep-alive
-< ETag: "65584154-44"
-< Accept-Ranges: bytes
-< 
-<!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World!</h1>
-</body>
-</html>
-* Connection #0 to host localhost left intact
-
-
-````
-
-</details>   
-
-
-------
-
-### Задание 2. Создать приложение с вашей веб-страницей, доступной по HTTPS 
-
-1. Создать Deployment приложения, состоящего из Nginx.
-2. Создать собственную веб-страницу и подключить её как ConfigMap к приложению.
-3. Выпустить самоподписной сертификат SSL. Создать Secret для использования сертификата.
-4. Создать Ingress и необходимый Service, подключить к нему SSL в вид. Продемонстировать доступ к приложению по HTTPS. 
-4. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
-
+1. Создайте и подпишите SSL-сертификат для подключения к кластеру.
+2. Настройте конфигурационный файл kubectl для подключения.
+3. Создайте роли и все необходимые настройки для пользователя.
+4. Предусмотрите права пользователя. Пользователь может просматривать логи подов и их конфигурацию (`kubectl logs pod <pod_id>`, `kubectl describe pod <pod_id>`).
+5. Предоставьте манифесты и скриншоты и/или вывод необходимых команд.
 
 <details>
 <summary>Ответ</summary>
@@ -156,42 +19,83 @@ netology@microk8s:~$ curl -v localhost:8080
 Configmap используем тот же
 [configmap_nginx](/configmap_nginx.yaml)
 
-````  
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -addext "subjectAltName = IP:158.160.23.204" -keyout /etc/ssl/private/key.key -out /etc/ssl/certs/cer.crt
-
-netology@microk8s:~/k8s$ kubectl describe ingress
-Name:             test-tls
-Labels:           <none>
-Namespace:        default
-Address:          
-Ingress Class:    nginx
-Default backend:  <default>
-TLS:
-  nginx-tls terminates test-tls.com
-Rules:
-  Host          Path  Backends
-  ----          ----  --------
-  test-tls.com  
-                /   service-nginx-web:80 (10.1.128.202:80)
-Annotations:    nginx.ingress.kubernetes.io/rewrite-target: /
-Events:
-  Type    Reason  Age   From                      Message
-  ----    ------  ----  ----                      -------
-  Normal  Sync    12s   nginx-ingress-controller  Scheduled for sync
-
-netology@microk8s:/etc$ curl -k --resolve test-tls.com:443:158.160.23.204 https://test-tls.com/
-<!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World!</h1>
-</body>
-</html>
-
+Создаем SSL-сертификат
+````    
+netology@microk8s:~/k8s$ openssl genrsa -out test.key 2048
+netology@microk8s:~/k8s$openssl req -new -key test.key -out test.csr -subj "/CN=test/O=ops"
+netology@microk8s:~/k8s$sudo openssl x509 -req -in test.csr -CA /var/snap/microk8s/current/certs/ca.crt -CAkey /var/snap/microk8s/current/certs/ca.key -out test.crt -days 365  
+netology@microk8s:~/k8s$ ls
+test.crt  test.csr  test.key
 
 ````
+Настраиваем конфигурационный файл kubectl
+
+````   
+netology@microk8s:~/k8s$ kubectl config set-credentials test --client-certificate=test.crt --client-key=test.key --embed-certs=true
+User "test" set.
+
+netology@microk8s:~/k8s$ kubectl config set-context test --cluster=microk8s-cluster --user=test
+Context "test" created.
+
+netology@microk8s:~/k8s$ kubectl config get-contexts 
+CURRENT   NAME       CLUSTER            AUTHINFO   NAMESPACE
+*         microk8s   microk8s-cluster   admin      
+          test       microk8s-cluster   test       
+
+netology@microk8s:~/k8s$ kubectl config use-context test
+Switched to context "test".
+
+netology@microk8s:~/k8s$ kubectl config get-contexts 
+CURRENT   NAME       CLUSTER            AUTHINFO   NAMESPACE
+          microk8s   microk8s-cluster   admin      
+*         test       microk8s-cluster   test       
+
+````   
+Создаем роли и необходимые настройки   
+
+~~~
+netology@microk8s:~/k8s$ kubectl create ns test
+namespace/test created
+netology@microk8s:~/k8s$ kubectl -n test create -f role.yaml
+role.rbac.authorization.k8s.io/logs-config-reader created
+netology@microk8s:~/k8s$ kubectl -n test get role
+NAME                 CREATED AT
+logs-config-reader   2023-11-21T05:38:23Z
+netology@microk8s:~/k8s$ kubectl -n test create -f roleb.yaml 
+rolebinding.rbac.authorization.k8s.io/logs-config-reader created
+netology@microk8s:~/k8s$ kubectl -n test get rolebindings  
+NAME                 ROLE                      AGE
+logs-config-reader   Role/logs-config-reader   12s
+
+netology@microk8s:~/k8s$ kubectl -n test get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+nginx-7854ff8877-q59bs   1/1     Running   0          5m37s
+netology@microk8s:~/k8s$ kubectl -n test get logs nginx-7854ff8877-q59bs
+error: the server doesn't have a resource type "logs"
+netology@microk8s:~/k8s$ kubectl -n test logs nginx-7854ff8877-q59bs
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2023/11/21 05:41:42 [notice] 1#1: using the "epoll" event method
+2023/11/21 05:41:42 [notice] 1#1: nginx/1.25.3
+2023/11/21 05:41:42 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2023/11/21 05:41:42 [notice] 1#1: OS: Linux 5.15.0-88-generic
+2023/11/21 05:41:42 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 65536:65536
+2023/11/21 05:41:42 [notice] 1#1: start worker processes
+2023/11/21 05:41:42 [notice] 1#1: start worker process 30
+2023/11/21 05:41:42 [notice] 1#1: start worker process 31
+2023/11/21 05:41:42 [notice] 1#1: start worker process 32
+2023/11/21 05:41:42 [notice] 1#1: start worker process 33
+
+   
+~~~   
+
+
 
 </details>   
-
-
-------
-
