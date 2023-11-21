@@ -12,12 +12,9 @@
 <summary>Ответ</summary>
 <br>   
 
-[deployment_nginx](/deployment_nginx.yaml)   
-[sercret](/sercret..yaml)   
-[service_nginx](/service_nginx.yaml)   
-[ingress](/ingress.yaml)  
-Configmap используем тот же
-[configmap_nginx](/configmap_nginx.yaml)
+[role](/role.yaml)   
+[rolebinding](/rolebinding.yaml)   
+
 
 Создаем SSL-сертификат
 ````    
