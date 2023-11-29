@@ -1,133 +1,54 @@
-# Домашнее задание к занятию «Helm»
+# Домашнее задание к занятию «Компоненты Kubernetes»
 
-### Задание 1. Подготовить Helm-чарт для приложения
+### Задание. Необходимо определить требуемые ресурсы
+Известно, что проекту нужны база данных, система кеширования, а само приложение состоит из бекенда и фронтенда. Опишите, какие ресурсы нужны, если известно:
 
 1. Необходимо упаковать приложение в чарт для деплоя в разные окружения. 
-2. Каждый компонент приложения деплоится отдельным deployment’ом или statefulset’ом.
-3. В переменных чарта измените образ приложения для изменения версии.
+2. База данных должна быть отказоустойчивой. Потребляет 4 ГБ ОЗУ в работе, 1 ядро. 3 копии. 
+3. Кеш должен быть отказоустойчивый. Потребляет 4 ГБ ОЗУ в работе, 1 ядро. 3 копии. 
+4. Фронтенд обрабатывает внешние запросы быстро, отдавая статику. Потребляет не более 50 МБ ОЗУ на каждый экземпляр, 0.2 ядра. 5 копий. 
+5. Бекенд потребляет 600 МБ ОЗУ и по 1 ядру на копию. 10 копий.
 
 <details>
 <summary>Ответ</summary>
 <br>   
 
-[deployment](/nginx/templates/deployment.yaml)   
-[nginx values](/nginx/nginx.yaml)   
-[multitool values](/nginx/multitool.yaml)  
+Необходимые ресурсы для проекта
 
-</details>
+|          | CPU | RAM  | Replicas | Sum CPU | Sum RAM |
+|----------|-----|------|----------|---------| ------- |
+| БД       | 1   | 4    | 3        | 3       | 12      |
+| Кеш      | 1   | 4    | 3        | 3       | 12      |
+| Фронтенд | 0,2 | 0,05 | 5        | 1       | 0,25    |
+| Бекенд   | 1   | 0,6  | 10       | 10      | 6       |
 
-------
-### Задание 2. Запустить две версии в разных неймспейсах
+Расчёт количества рабочих нод кластера для проекта:
+- Control Plane - 3 ноды, в минимальной конфигурации 2 CPU, 2 RAM
+- Worker Node
+  - БД - 3 ноды, конфигурация ноды 1 CPU, 4 RAM
+  - Кеш - 3 ноды, конфигурация ноды 1 CPU, 4 RAM
+  - Фронтенд - 2 ноды, конфигурация ноды 0,5 CPU, 0,125 RAM
+  - Бекенд - 2 ноды, конфигурация ноды 5 CPU, 3 RAM
 
-1. Подготовив чарт, необходимо его проверить. Запуститe несколько копий приложения.
-2. Одну версию в namespace=app1, вторую версию в том же неймспейсе, третью версию в namespace=app2.
-3. Продемонстрируйте результат.
+Суммарно для проекта требуется:
+  - 17 CPU
+  - 30,25 RAM
 
-<details>
-<summary>Ответ</summary>
-<br>   
+Для получения отказоустойчивости, исходя из суммарных значений, к этим значениям прибавим 40%,
+что даст нам возможность не потерять в производительности при отказе 1 ноды.
 
-Проверяем манифесты и values   
+Итоговые значения:
 
-```   
-➜  devops-netology git:(k8s_dz10) ✗ helm lint netology-app -f nginx/nginx.yaml               
-==> Linting netology-app
-Error unable to check Chart.yaml file in chart: stat netology-app/Chart.yaml: no such file or directory
+Расчёт ресурсов с учётом миграций и выхода ноды из строя
+  - CPU: 17 + 40% = 24 (округлил в +)
+  - RAM: 30,25 + 40% = 43 (округлил в +)
 
-Error: 1 chart(s) linted, 1 chart(s) failed
-➜  devops-netology git:(k8s_dz10) ✗ helm lint netology-app -f nginx/multitool.yaml 
-==> Linting netology-app
-Error unable to check Chart.yaml file in chart: stat netology-app/Chart.yaml: no such file or directory
+Расчёт одной ноды (известно что потребуется три рабочие ноды):
+  - CPU: 24 / 3 = 8 + 1 (на работу самой ноды) = 9
+  - RAM: 43 / 3 = 15 (округлил в +) +1 (на работу самой ноды) = 16
 
-Error: 1 chart(s) linted, 1 chart(s) failed
-
-```   
-Ставим первую версию в ns app1
-````   
-➜  nginx git:(k8s_dz10) ✗ cat Chart.yaml | grep appVersion
-appVersion: "1.0.0"
-
-➜  devops-netology git:(k8s_dz10) ✗ helm upgrade --install --atomic netology-app-front nginx/ --namespace app1 -f nginx/nginx.yaml
-Release "netology-app-front" does not exist. Installing it now.
-NAME: netology-app-front
-LAST DEPLOYED: Sat Nov 25 08:49:48 2023
-NAMESPACE: app1
-STATUS: deployed
-REVISION: 1
-NOTES:
-1. Get the application URL by running these commands:
-  export POD_NAME=$(kubectl get pods --namespace app1 -l "app.kubernetes.io/name=netology-app,app.kubernetes.io/instance=netology-app-front" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod --namespace app1 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace app1 port-forward $POD_NAME 8080:$CONTAINER_PORT
-➜  devops-netology git:(k8s_dz10) ✗ helm upgrade --install --atomic netology-app-back nginx/ --namespace app1 -f nginx/multitool.yaml
-Release "netology-app-back" has been upgraded. Happy Helming!
-NAME: netology-app-back
-LAST DEPLOYED: Sat Nov 25 08:50:13 2023
-NAMESPACE: app1
-STATUS: deployed
-REVISION: 2
-NOTES:
-1. Get the application URL by running these commands:
-  export POD_NAME=$(kubectl get pods --namespace app1 -l "app.kubernetes.io/name=netology-app,app.kubernetes.io/instance=netology-app-back" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod --namespace app1 $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace app1 port-forward $POD_NAME 8080:$CONTAINER_PORT
-➜  devops-netology git:(k8s_dz10) ✗ kubectl -n app1 get pods                                                                     
-NAME                     READY   STATUS    RESTARTS   AGE
-nginx-5994654c77-5b6zb   1/1     Running   0          33s
-multitool-0              1/1     Running   0          8s
-
-````   
-Обновляем версию приложения до 1.1.0
-
-````  
-➜  devops-netology git:(k8s_dz10) ✗ cat nginx/Chart.yaml | grep appVersion
-appVersion: "1.1.0"
-➜  devops-netology git:(k8s_dz10) ✗ helm upgrade --install --atomic netology-app-back nginx/ --namespace app1 -f nginx/multitool.yaml
-Release "netology-app-back" has been upgraded. Happy Helming!
-NAME: netology-app-back
-LAST DEPLOYED: Sat Nov 25 09:09:36 2023
-NAMESPACE: app1
-STATUS: deployed
-REVISION: 4
-➜  devops-netology git:(k8s_dz10) ✗ helm upgrade --install --atomic netology-app-front nginx/ --namespace app1 -f nginx/nginx.yaml   
-Release "netology-app-front" has been upgraded. Happy Helming!
-NAME: netology-app-front
-LAST DEPLOYED: Sat Nov 25 09:09:42 2023
-NAMESPACE: app1
-STATUS: deployed
-REVISION: 3
-➜  devops-netology git:(k8s_dz10) ✗ kubectl -n app1 get pods
-NAME                     READY   STATUS    RESTARTS   AGE
-nginx-5994654c77-9278j   1/1     Running   0          60s
-multitool-0              1/1     Running   0          44s
-
-````   
-Ставим третью версию в ns app2
-
-````   
-➜  devops-netology git:(k8s_dz10) ✗ cat nginx/Chart.yaml | grep appVersion
-appVersion: "1.1.2"
-➜  devops-netology git:(k8s_dz10) ✗ helm upgrade --install --atomic netology-app-front nginx/ --namespace app2 -f nginx/nginx.yaml
-Release "netology-app-front" does not exist. Installing it now.
-NAME: netology-app-front
-LAST DEPLOYED: Sat Nov 25 09:13:25 2023
-NAMESPACE: app2
-STATUS: deployed
-REVISION: 1
-➜  devops-netology git:(k8s_dz10) ✗ helm upgrade --install --atomic netology-app-back nginx/ --namespace app2 -f nginx/multitool.yaml
-Release "netology-app-back" does not exist. Installing it now.
-NAME: netology-app-back
-LAST DEPLOYED: Sat Nov 25 09:13:42 2023
-NAMESPACE: app2
-STATUS: deployed
-REVISION: 1
-➜  devops-netology git:(k8s_dz10) ✗ kubectl -n app2 get pods                                                                  
-NAME                     READY   STATUS    RESTARTS   AGE
-nginx-5994654c77-gkvcg   1/1     Running   0          26s
-multitool-0              1/1     Running   0          9s
-
-````   
+Итого
+  - Нужно 3 рабоче ноды, характеристики одной ноды 9 CPU, 16 RAM
+  - Нужно 3 управляющие ноды, характеристики одной ноды 2 CPU, 2 RAM   
 
 </details>
