@@ -1,54 +1,77 @@
-# Домашнее задание к занятию «Компоненты Kubernetes»
+# Домашнее задание к занятию «Установка Kubernetes»
 
-### Задание. Необходимо определить требуемые ресурсы
-Известно, что проекту нужны база данных, система кеширования, а само приложение состоит из бекенда и фронтенда. Опишите, какие ресурсы нужны, если известно:
+### Задание 1. Установить кластер k8s с 1 master node
 
-1. Необходимо упаковать приложение в чарт для деплоя в разные окружения. 
-2. База данных должна быть отказоустойчивой. Потребляет 4 ГБ ОЗУ в работе, 1 ядро. 3 копии. 
-3. Кеш должен быть отказоустойчивый. Потребляет 4 ГБ ОЗУ в работе, 1 ядро. 3 копии. 
-4. Фронтенд обрабатывает внешние запросы быстро, отдавая статику. Потребляет не более 50 МБ ОЗУ на каждый экземпляр, 0.2 ядра. 5 копий. 
-5. Бекенд потребляет 600 МБ ОЗУ и по 1 ядру на копию. 10 копий.
+1. Подготовка работы кластера из 5 нод: 1 мастер и 4 рабочие ноды.
+2. В качестве CRI — containerd.
+3. Запуск etcd производить на мастере.
+4. Способ установки выбрать самостоятельно.
 
 <details>
 <summary>Ответ</summary>
 <br>   
 
-Необходимые ресурсы для проекта
+Установку будем проводить с помощью [Документация kubespray](https://kubespray.io/).   
 
-|          | CPU | RAM  | Replicas | Sum CPU | Sum RAM |
-|----------|-----|------|----------|---------| ------- |
-| БД       | 1   | 4    | 3        | 3       | 12      |
-| Кеш      | 1   | 4    | 3        | 3       | 12      |
-| Фронтенд | 0,2 | 0,05 | 5        | 1       | 0,25    |
-| Бекенд   | 1   | 0,6  | 10       | 10      | 6       |
+Согласно рекомендациям воспользуемся готовым образом
 
-Расчёт количества рабочих нод кластера для проекта:
-- Control Plane - 3 ноды, в минимальной конфигурации 2 CPU, 2 RAM
-- Worker Node
-  - БД - 3 ноды, конфигурация ноды 1 CPU, 4 RAM
-  - Кеш - 3 ноды, конфигурация ноды 1 CPU, 4 RAM
-  - Фронтенд - 2 ноды, конфигурация ноды 0,5 CPU, 0,125 RAM
-  - Бекенд - 2 ноды, конфигурация ноды 5 CPU, 3 RAM
+docker run --rm -it --mount type=bind,source="${HOME}"/.ssh/id_ed25519,dst=/root/.ssh/id_rsa \
+  quay.io/kubespray/kubespray:v2.23.1 bash
 
-Суммарно для проекта требуется:
-  - 17 CPU
-  - 30,25 RAM
+Заполним инвентории    
 
-Для получения отказоустойчивости, исходя из суммарных значений, к этим значениям прибавим 40%,
-что даст нам возможность не потерять в производительности при отказе 1 ноды.
+declare -a IPS=(10.128.0.17 10.128.0.7 10.128.0.15 10.128.0.18 10.128.0.10)
+CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 
-Итоговые значения:
+Запустим плайбук   
+ansible-playbook -i inventory/mycluster/hosts.yaml  -u yc-user --become  cluster.yml
 
-Расчёт ресурсов с учётом миграций и выхода ноды из строя
-  - CPU: 17 + 40% = 24 (округлил в +)
-  - RAM: 30,25 + 40% = 43 (округлил в +)
+[Лог отработки плайбука](install.log)
 
-Расчёт одной ноды (известно что потребуется три рабочие ноды):
-  - CPU: 24 / 3 = 8 + 1 (на работу самой ноды) = 9
-  - RAM: 43 / 3 = 15 (округлил в +) +1 (на работу самой ноды) = 16
+Подключаем к мастер ноде и проверяем статус кластера:
 
-Итого
-  - Нужно 3 рабоче ноды, характеристики одной ноды 9 CPU, 16 RAM
-  - Нужно 3 управляющие ноды, характеристики одной ноды 2 CPU, 2 RAM   
+````   
+root@node1:~# kubectl get nodes -o wide
+NAME    STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+node1   Ready    control-plane   20m   v1.27.7   10.128.0.17   <none>        Ubuntu 20.04.6 LTS   5.4.0-167-generic   containerd://1.7.5
+node2   Ready    <none>          19m   v1.27.7   10.128.0.7    <none>        Ubuntu 20.04.6 LTS   5.4.0-167-generic   containerd://1.7.5
+node3   Ready    <none>          19m   v1.27.7   10.128.0.15   <none>        Ubuntu 20.04.6 LTS   5.4.0-167-generic   containerd://1.7.5
+node4   Ready    <none>          19m   v1.27.7   10.128.0.18   <none>        Ubuntu 20.04.6 LTS   5.4.0-167-generic   containerd://1.7.5
+node5   Ready    <none>          19m   v1.27.7   10.128.0.10   <none>        Ubuntu 20.04.6 LTS   5.4.0-167-generic   containerd://1.7.5
+
+````   
+
+````  
+root@node1:~# kubectl get pods -A
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
+kube-system   calico-kube-controllers-794577df96-rxw6m   1/1     Running   0          5m50s
+kube-system   calico-node-2plh7                          1/1     Running   0          7m3s
+kube-system   calico-node-b22qf                          1/1     Running   0          7m3s
+kube-system   calico-node-dc5k2                          1/1     Running   0          7m3s
+kube-system   calico-node-tl8k8                          1/1     Running   0          7m3s
+kube-system   calico-node-x68kv                          1/1     Running   0          7m3s
+kube-system   coredns-5c469774b8-dgm8h                   1/1     Running   0          5m2s
+kube-system   coredns-5c469774b8-vptbh                   1/1     Running   0          5m16s
+kube-system   dns-autoscaler-f455cf558-vjdct             1/1     Running   0          5m9s
+kube-system   kube-apiserver-node1                       1/1     Running   1          8m57s
+kube-system   kube-controller-manager-node1              1/1     Running   2          8m56s
+kube-system   kube-proxy-2c49d                           1/1     Running   0          7m54s
+kube-system   kube-proxy-d9pcq                           1/1     Running   0          7m54s
+kube-system   kube-proxy-h8zv7                           1/1     Running   0          7m55s
+kube-system   kube-proxy-mkkjd                           1/1     Running   0          7m55s
+kube-system   kube-proxy-rrgqp                           1/1     Running   0          7m55s
+kube-system   kube-scheduler-node1                       1/1     Running   1          8m56s
+kube-system   nginx-proxy-node2                          1/1     Running   0          7m57s
+kube-system   nginx-proxy-node3                          1/1     Running   0          7m58s
+kube-system   nginx-proxy-node4                          1/1     Running   0          7m57s
+kube-system   nginx-proxy-node5                          1/1     Running   0          7m59s
+kube-system   nodelocaldns-5cd4b                         1/1     Running   0          5m7s
+kube-system   nodelocaldns-6m5wl                         1/1     Running   0          5m7s
+kube-system   nodelocaldns-h47dv                         1/1     Running   0          5m7s
+kube-system   nodelocaldns-n4szr                         1/1     Running   0          5m7s
+kube-system   nodelocaldns-vd4bs                         1/1     Running   0          5m7s
+root@node1:~# 
+
+````   
 
 </details>
