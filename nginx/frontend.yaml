@@ -6,12 +6,12 @@ replicaCount: 1
 labels: frontend
 
 image:
-  repository: nginx
+  repository: wbitt/network-multitool
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.14.2"
+  tag: "latest"
 
-fullnameOverride: "nginx"
+fullnameOverride: "frontend"
 
 service:
   type: ClusterIP
