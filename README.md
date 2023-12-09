@@ -17,6 +17,7 @@
 доступность, то обновление будем производить на основе стратегии Rolling Update Deployment, 
 доступный ресурсов будем регулировать параметрами maxUnavailable and maxSurge.
 
+[deployment](deployment.yaml)   
 </details>   
 
 ### Задание 2. Обновить приложение
