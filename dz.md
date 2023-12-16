@@ -1,107 +1,228 @@
-# Домашнее задание к занятию «Основы Terraform. Yandex Cloud»  
+# Домашнее задание к занятию «Организация сети»
 
-## Задача 1   
+### Задание 1. Yandex Cloud
 
-Изучите проект. В файле variables.tf объявлены переменные для yandex provider.
-Переименуйте файл personal.auto.tfvars_example в personal.auto.tfvars. Заполните переменные (идентификаторы облака, токен доступа). Благодаря .gitignore этот файл не попадет в публичный репозиторий. Вы можете выбрать иной способ безопасно передать секретные данные в terraform.
-Сгенерируйте или используйте свой текущий ssh ключ. Запишите его открытую часть в переменную vms_ssh_root_key.
-Инициализируйте проект, выполните код. Исправьте возникшую ошибку.  
-Ответьте в чем заключается ее суть?
-Ответьте, как в процессе обучения могут пригодиться параметрыpreemptible = true и core_fraction=5 в параметрах ВМ? Ответ в документации Yandex cloud.
+1. Создать пустую VPC. Выбрать зону.
+2. Публичная подсеть.
+ - Создать в VPC subnet с названием public, сетью 192.168.10.0/24.
+ - Создать в этой подсети NAT-инстанс, присвоив ему адрес 192.168.10.254. В качестве image_id использовать fd80mrhj8fl2oe87o4e1.
+ - Создать в этой публичной подсети виртуалку с публичным IP, подключиться к ней и убедиться, что есть доступ к интернету.
+3. Приватная подсеть.
+ - Создать в VPC subnet с названием private, сетью 192.168.20.0/24.
+ - Создать route table. Добавить статический маршрут, направляющий весь исходящий трафик private сети в NAT-инстанс.
+ - Создать в этой приватной подсети виртуалку с внутренним IP, подключиться к ней через виртуалку, созданную ранее, и убедиться, что есть доступ к интернету.
 
-Ответ:    
+<details>
+<summary>Ответ</summary>
+<br>   
 
-![Снимок экрана 2023-06-03 в 06 58 50](https://github.com/tomaevmax/devops-netology/assets/32243921/d105f1cc-8652-4ad7-a136-6f4e20a39b57)   
+[main.tf](/src/main.tf)
 
-![Снимок экрана 2023-06-03 в 06 59 01](https://github.com/tomaevmax/devops-netology/assets/32243921/c58e717b-092e-47fb-8a1e-91fd17bb531e)  
+Создаем инфраструктуру 
+````   
+Plan: 8 to add, 0 to change, 0 to destroy.
 
-В процессе применения плана возникла ошибка.
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
 
-``` 
-yandex_compute_instance.platform: Creating...   
+  Enter a value: yes
 
-Error: Error while requesting API to create instance: server-request-id = f9d7382f-5dbc-47d0-adb5-7db08cb3bed4 server-trace-id = 69afd10ad50d6ff1:ee536ba6a6bc3b53:69afd10ad50d6ff1:1 client-request-id = f4c34639-975d-4e48-8934-489f7bd1992c client-trace-id = 4860ad7f-7d93-460d-9067-74d3e70ada6c rpc error: code = InvalidArgument desc = the specified number of cores is not available on platform "standard-v1"; allowed core number: 2, 4   
-```   
-Суть ошибки состояти в тоv, что в яндек облаке для создаваемых VM нельзя указывать нечетное количество ядер.   
-preemptible = true - полезная в целях экономии ресурсов, когда можно сразу определить каким vm можно пожертвовать при нехватки ресурсов.   
-core_fraction=5 - сможет пригодится, когда потребуется запустить больше виртуалок с количеством ядер в настройках большем чем чем физически нам доступном.   
+yandex_vpc_network.cloud: Creating...
+yandex_compute_image.ubuntu-2204-lts: Creating...
+yandex_vpc_network.cloud: Creation complete after 2s [id=enpv9brnm0fodun7ln9l]
+yandex_vpc_route_table.cloud-rt: Creating...
+yandex_vpc_subnet.public: Creating...
+yandex_vpc_route_table.cloud-rt: Creation complete after 1s [id=enp2fhsamns2gq40vdni]
+yandex_vpc_subnet.privat: Creating...
+yandex_vpc_subnet.privat: Creation complete after 0s [id=e9bea5902lfjjvubj92c]
+yandex_vpc_subnet.public: Creation complete after 2s [id=e9bkaaqfjuvvutrj0dfh]
+yandex_compute_instance.nat-instance: Creating...
+yandex_compute_image.ubuntu-2204-lts: Still creating... [10s elapsed]
+yandex_compute_image.ubuntu-2204-lts: Creation complete after 13s [id=fd8ngac4duvs68rrtj9c]
+yandex_compute_instance.test-vm: Creating...
+yandex_compute_instance.test-vm2: Creating...
+yandex_compute_instance.nat-instance: Still creating... [10s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [10s elapsed]
+yandex_compute_instance.test-vm: Still creating... [10s elapsed]
+yandex_compute_instance.nat-instance: Still creating... [20s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [20s elapsed]
+yandex_compute_instance.test-vm: Still creating... [20s elapsed]
+yandex_compute_instance.nat-instance: Still creating... [30s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [30s elapsed]
+yandex_compute_instance.test-vm: Still creating... [30s elapsed]
+yandex_compute_instance.nat-instance: Still creating... [40s elapsed]
+yandex_compute_instance.test-vm: Still creating... [40s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [40s elapsed]
+yandex_compute_instance.nat-instance: Still creating... [50s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [50s elapsed]
+yandex_compute_instance.test-vm: Still creating... [50s elapsed]
+yandex_compute_instance.nat-instance: Still creating... [1m0s elapsed]
+yandex_compute_instance.nat-instance: Creation complete after 1m4s [id=fhmksljvfigon0gdlcmq]
+yandex_compute_instance.test-vm: Still creating... [1m0s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [1m0s elapsed]
+yandex_compute_instance.test-vm: Still creating... [1m10s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [1m10s elapsed]
+yandex_compute_instance.test-vm2: Still creating... [1m20s elapsed]
+yandex_compute_instance.test-vm: Still creating... [1m20s elapsed]
+yandex_compute_instance.test-vm: Creation complete after 1m24s [id=fhml02kevai7n09mt9eh]
+yandex_compute_instance.test-vm2: Still creating... [1m30s elapsed]
+yandex_compute_instance.test-vm2: Creation complete after 1m40s [id=fhmte8fn86pi1vcpgd35]
 
-## Задание 2   
-Изучите файлы проекта.   
-Замените все "хардкод" значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.   
-Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.   
-Проверьте terraform plan (изменений быть не должно).   
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+➜  src git:(cloud-01) ✗ yc compute instance list                                  
++----------------------+-----------+---------------+---------+---------------+----------------+
+|          ID          |   NAME    |    ZONE ID    | STATUS  |  EXTERNAL IP  |  INTERNAL IP   |
++----------------------+-----------+---------------+---------+---------------+----------------+
+| fhmksljvfigon0gdlcmq | nat-vm    | ru-central1-a | RUNNING | 51.250.77.242 | 192.168.10.254 |
+| fhml02kevai7n09mt9eh | public-vm | ru-central1-a | RUNNING | 51.250.5.75   | 192.168.10.31  |
+| fhmte8fn86pi1vcpgd35 | privat-vm | ru-central1-a | RUNNING |               | 192.168.20.20  |
++----------------------+-----------+---------------+---------+---------------+----------------+
 
-Ответ   
-[variables.tf](/src/variables.tf)
-![No change](https://github.com/tomaevmax/devops-netology/assets/32243921/bbac92fe-b7d8-4ba3-9d5e-085e6065d331)
+````    
+Проверяем доступы в публичной подсети   
+````
+➜  src git:(cloud-01) ✗ ssh ubuntu@51.250.5.75 
+The authenticity of host '51.250.5.75 (51.250.5.75)' can't be established.
+ED25519 key fingerprint is SHA256:ayb3ApVdReCYwsgKuj2e4ipHZgAKvJq2hBFt5pTxyZA.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '51.250.5.75' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
 
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
 
+  System information as of Sat Dec 16 07:31:39 AM UTC 2023
 
-## Задание 3   
-Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.   
-Скопируйте блок ресурса и создайте с его помощью вторую ВМ(в файле main.tf): "netology-develop-platform-db" , cores = 2, memory = 2, core_fraction = 20. Объявите ее переменные с префиксом vm_db_ в том же файле('vms_platform.tf').   
-Примените изменения.   
-
-Ответ  
-
-[vms_platform.tf](/src/vms_platform.tf)
-
-## Задание 4   
-
-Объявите в файле outputs.tf output типа map, содержащий { instance_name = external_ip } для каждой из ВМ.
-Примените изменения.
-В качестве решения приложите вывод значений ip-адресов команды terraform output   
-
-Ответ:    
-![ip_external](https://github.com/tomaevmax/devops-netology/assets/32243921/82011ba2-a7fd-406b-a550-1a090a7d8b42)
-
-## Задание 5   
-В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.   
-Замените переменные с именами ВМ из файла variables.tf на созданные вами local переменные.   
-Примените изменения.   
-
-Ответ:  
-[locals.tf](/src/locals.tf)
-[variables.tf](/src/variables.tf)
-
-## Задание 6   
-Вместо использования 3-х переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедените их в переменные типа map с именами "vm_web_resources" и "vm_db_resources".   
-Так же поступите с блоком metadata {serial-port-enable, ssh-keys}, эта переменная должна быть общая для всех ваших ВМ.   
-Найдите и удалите все более не используемые переменные проекта.   
-Проверьте terraform plan (изменений быть не должно).   
-
-Ответ: 
-[vms_platform.tf](/src/vms_platform.tf)   
-![Снимок экрана 2023-06-10 в 18 07 29](https://github.com/tomaevmax/devops-netology/assets/32243921/150051cf-3d1c-451a-9c16-518ca21de1cc)
+  System load:  1.67041015625     Processes:             137
+  Usage of /:   53.8% of 7.79GB   Users logged in:       0
+  Memory usage: 10%               IPv4 address for eth0: 192.168.10.31
+  Swap usage:   0%
 
 
+Expanded Security Maintenance for Applications is not enabled.
 
-## Задание 7*   
+0 updates can be applied immediately.
 
-Изучите содержимое файла console.tf. Откройте terraform console, выполните следующие задания:
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
 
-Напишите, какой командой можно отобразить второй элемент списка test_list?
-Найдите длину списка test_list с помощью функции length(<имя переменной>).
-Напишите, какой командой можно отобразить значение ключа admin из map test_map ?
-Напишите interpolation выражение, результатом которого будет: "John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks", используйте данные из переменных test_list, test_map, servers и функцию length() для подстановки значений.
-В качестве решения предоставьте необходимые команды и их вывод.
 
-Ответ: 
-```   
-> local.test_list[1]
-"staging"   
-```  
-```  
-> length(local.test_list)
-3   
-```  
-``` 
-> lookup(local.test_map, "admin", "not found")
-"John"   
-```   
-``` 
-> "${lookup(local.test_map, "admin", "not found")} is ${keys(local.test_map)[0]} for ${local.test_list[2]} server based on OS ${local.servers.production.image} with ${local.servers.production.cpu} cpu, ${local.servers.production.ram} ram and ${length(local.servers.production.disks)} virtual disks"
-"John is admin for production server based on OS ubuntu-20-04 with 10 cpu, 40 ram and 4 virtual disks"  
-```   
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
 
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@fhml02kevai7n09mt9eh:~$ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=58 time=18.0 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=58 time=18.0 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=58 time=17.8 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=58 time=18.2 ms
+^C
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3003ms
+rtt min/avg/max/mdev = 17.836/18.007/18.192/0.128 ms
+````   
+Проверяем доступ в приватной подсети
+````   
+➜  src git:(cloud-01) ✗ scp ~/.ssh/id_ed25519 ubuntu@51.250.5.75:.ssh/id_ed25519
+id_ed25519                                                                                                                                                                                                                                                                       100%  411    13.5KB/s   00:00    
+➜  src git:(cloud-01) ✗ ssh ubuntu@51.250.5.75                                  
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Dec 16 07:32:54 AM UTC 2023
+
+  System load:  0.57373046875     Processes:             136
+  Usage of /:   53.8% of 7.79GB   Users logged in:       0
+  Memory usage: 10%               IPv4 address for eth0: 192.168.10.31
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Sat Dec 16 07:31:43 2023 from 109.248.252.157
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@fhml02kevai7n09mt9eh:~$ ssh 192.168.20.20 
+The authenticity of host '192.168.20.20 (192.168.20.20)' can't be established.
+ED25519 key fingerprint is SHA256:FMU77HfHrK+fA+qShewlswUvzDNwemuxNoe0JSj01gQ.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '192.168.20.20' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Dec 16 07:33:18 AM UTC 2023
+
+  System load:  0.58154296875     Processes:             139
+  Usage of /:   53.3% of 7.79GB   Users logged in:       0
+  Memory usage: 10%               IPv4 address for eth0: 192.168.20.20
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+ubuntu@fhmte8fn86pi1vcpgd35:~$ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=54 time=19.5 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=54 time=18.9 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=54 time=18.9 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=54 time=18.9 ms
+^C
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 18.876/19.047/19.463/0.241 ms
+
+````    
+
+</details>
+ 
