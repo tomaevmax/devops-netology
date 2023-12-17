@@ -157,7 +157,7 @@ targets:
 
 
 ````    
-Проверям доступность картинки из интернета запросос до сервера
+Проверям доступность картинки из интернета запросом до сервера
 
 ````   
 ➜  src git:(cloud-02) ✗ curl -v http:// 158.160.106.19
@@ -210,6 +210,48 @@ curl: (3) URL rejected: No host part in the URL
 * Connection #0 to host 158.160.132.132 left intact
   
 ````   
+Удаляем одну ноду и проверям доступность через балансир
 
+````   
+➜  src git:(cloud-02) ✗ yc compute instance list
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+|          ID          |           NAME            |    ZONE ID    | STATUS  |   EXTERNAL IP   |  INTERNAL IP  |
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+| fhm0qeu8nke0h35tjgq7 | cl1khvrddk9mvnco60fc-ofof | ru-central1-a | RUNNING | 158.160.106.19  | 192.168.10.6  |
+| fhmfh4l2mi11i72e36un | cl1khvrddk9mvnco60fc-ywun | ru-central1-a | RUNNING | 158.160.118.107 | 192.168.10.13 |
+| fhmphkbolmd5nt9e1cu6 | cl1khvrddk9mvnco60fc-uqoj | ru-central1-a | RUNNING | 84.252.128.91   | 192.168.10.15 |
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
 
+➜  src git:(cloud-02) ✗ yc compute instance delete --name cl1khvrddk9mvnco60fc-ofof
+done (43s)
+➜  src git:(cloud-02) ✗ yc compute instance list                                   
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+|          ID          |           NAME            |    ZONE ID    | STATUS  |   EXTERNAL IP   |  INTERNAL IP  |
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+| fhmfh4l2mi11i72e36un | cl1khvrddk9mvnco60fc-ywun | ru-central1-a | RUNNING | 158.160.118.107 | 192.168.10.13 |
+| fhmphkbolmd5nt9e1cu6 | cl1khvrddk9mvnco60fc-uqoj | ru-central1-a | RUNNING | 84.252.128.91   | 192.168.10.15 |
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+
+➜  src git:(cloud-02) ✗ curl -v http://158.160.132.132                             
+*   Trying 158.160.132.132:80...
+* Connected to 158.160.132.132 (158.160.132.132) port 80
+> GET / HTTP/1.1
+> Host: 158.160.132.132
+> User-Agent: curl/8.4.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Sun, 17 Dec 2023 12:08:49 GMT
+< Server: Apache/2.4.29 (Ubuntu)
+< Last-Modified: Sun, 17 Dec 2023 11:57:05 GMT
+< ETag: "85-60cb3550295c0"
+< Accept-Ranges: bytes
+< Content-Length: 133
+< Vary: Accept-Encoding
+< Content-Type: text/html
+< 
+<html><head><title>Test image</title></head><body><img src=https://storage.yandexcloud.net/cloud-dz2-picture/test.png></body></html>
+* Connection #0 to host 158.160.132.132 left intact
+
+````
 </details>
