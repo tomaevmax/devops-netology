@@ -2,15 +2,6 @@ resource "yandex_vpc_network" "cloud" {
   name = "cloud-network"
 }
 
-resource "yandex_vpc_route_table" "cloud-rt" {
-  network_id = "${yandex_vpc_network.cloud.id}"
-
-  static_route {
-    destination_prefix = "0.0.0.0/0"
-    next_hop_address   = "192.168.10.254"
-  }
-}
-
 resource "yandex_vpc_subnet" "public" {
   name = "public"
   v4_cidr_blocks = ["192.168.10.0/24"]
@@ -18,103 +9,130 @@ resource "yandex_vpc_subnet" "public" {
   network_id     = "${yandex_vpc_network.cloud.id}"
 }
 
-resource "yandex_vpc_subnet" "privat" {
-  name = "privat"
-  v4_cidr_blocks = ["192.168.20.0/24"]
-  zone           = "ru-central1-a"
-  network_id     = "${yandex_vpc_network.cloud.id}"
-  route_table_id = "${yandex_vpc_route_table.cloud-rt.id}"
+resource "yandex_iam_service_account" "sa" {
+  name = "downloader"
 }
 
-# Creating a NAT VM
+// Назначение роли сервисному аккаунту
+resource "yandex_resourcemanager_folder_iam_member" "sa-editor" {
+  folder_id = var.folder_id
+  role      = "storage.editor"
+  member    = "serviceAccount:${yandex_iam_service_account.sa.id}"
+}
 
-resource "yandex_compute_instance" "nat-instance" {
-  name        = "nat-vm"
-  platform_id = "standard-v3"
-  zone        = "ru-central1-a"
+// Создание статического ключа доступа
+resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
+  service_account_id = yandex_iam_service_account.sa.id
+  description        = "static access key for object storage"
+}
 
-  resources {
-    core_fraction = 20
-    cores         = 2
-    memory        = 2
-  }
+// Создание бакета с использованием ключа
+resource "yandex_storage_bucket" "cloud-dz2" {
+  access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
+  secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
+  bucket     = "cloud-dz2-picture"
+  force_destroy = "true"
+  max_size = 1073741824
+}
 
-  boot_disk {
-    initialize_params {
-      image_id = "fd80mrhj8fl2oe87o4e1"
+resource "yandex_storage_object" "image-object" {
+  access_key = yandex_storage_bucket.cloud-dz2.access_key
+  secret_key = yandex_storage_bucket.cloud-dz2.secret_key
+  acl        = "public-read"
+  bucket     = "cloud-dz2-picture"
+  key        = "test.png"
+  source     = "/Users/maksimtomaev/Downloads/test.png"
+  depends_on = [
+    yandex_storage_bucket.cloud-dz2,
+  ]
+}
+
+resource "yandex_compute_image" "lamp-vm-image" {
+  source_family = "lamp"
+}
+
+resource "yandex_compute_instance_group" "lamp-group" {
+  name                = "lamp-server"
+  folder_id           = var.folder_id
+  service_account_id  =  var.admin_id
+  deletion_protection = false
+  instance_template {
+    platform_id = "standard-v1"
+    resources {
+      memory = 2
+      cores  = 2
+    }
+    boot_disk {
+      mode = "READ_WRITE"
+      initialize_params {
+        image_id = yandex_compute_image.lamp-vm-image.id
+        size     = 4
+      }
+    }
+    network_interface {
+      network_id = "${yandex_vpc_network.cloud.id}"
+      subnet_ids = ["${yandex_vpc_subnet.public.id}"]
+      nat = "true"
+    }
+    metadata = {
+      user-data = "#cloud-config\nusers:\n  - name: ubuntu\n    groups: sudo,wheel\n    shell: /bin/bash\n    sudo: ['ALL=(ALL) NOPASSWD:ALL']\n    ssh-authorized-keys:\n      - ${file("~/.ssh/id_ed25519.pub")}runcmd:\n  - echo '<html><head><title>Test image</title></head><body><img src=${var.image_id}></body></html>' > /var/www/html/index.html"
+    }
+    network_settings {
+      type = "STANDARD"
     }
   }
 
-  network_interface {
-    subnet_id          = yandex_vpc_subnet.public.id
-    nat                = true
-    ip_address = "192.168.10.254"
-  }
-
-  metadata = {
-    user-data = "#cloud-config\nusers:\n  - name: ubuntu\n    groups: sudo\n    shell: /bin/bash\n    sudo: ['ALL=(ALL) NOPASSWD:ALL']\n    ssh-authorized-keys:\n      - ${file("~/.ssh/id_ed25519.pub")}"
-  }
-}
-
-# Creating disk images from Cloud Marketplace products
-
-resource "yandex_compute_image" "ubuntu-2204-lts" {
-  source_family = "ubuntu-2204-lts"
-}
-
-# Creating a VM
-
-resource "yandex_compute_instance" "test-vm" {
-  name        = "public-vm"
-  platform_id = "standard-v3"
-  zone        = "ru-central1-a"
-
-  resources {
-    core_fraction = 20
-    cores         = 2
-    memory        = 2
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = yandex_compute_image.ubuntu-2204-lts.id
+  scale_policy {
+    fixed_scale {
+      size = 3
     }
   }
 
-  network_interface {
-    subnet_id = yandex_vpc_subnet.public.id
-    nat = true
+  allocation_policy {
+    zones = ["ru-central1-a"]
   }
 
-  metadata = {
-    user-data = "#cloud-config\nusers:\n  - name: ubuntu\n    groups: sudo\n    shell: /bin/bash\n    sudo: ['ALL=(ALL) NOPASSWD:ALL']\n    ssh-authorized-keys:\n      - ${file("~/.ssh/id_ed25519.pub")}"
+  deploy_policy {
+    max_unavailable = 3
+    max_creating    = 3
+    max_expansion   = 3
+    max_deleting    = 3
+  }
+
+  health_check {
+    interval = 60
+    timeout = 30
+    http_options {
+      port = 80
+      path = "/index.html"
+    }
+  }
+  load_balancer {
+    target_group_name        = "lamp-server"
+    target_group_description = "test balanser"
   }
 }
 
-# Creating a VM
+resource "yandex_lb_network_load_balancer" "test-lb" {
+  name = "network-load-balancer-1"
 
-resource "yandex_compute_instance" "test-vm2" {
-  name        = "privat-vm"
-  platform_id = "standard-v3"
-  zone        = "ru-central1-a"
-
-  resources {
-    core_fraction = 20
-    cores         = 2
-    memory        = 2
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = yandex_compute_image.ubuntu-2204-lts.id
+  listener {
+    name = "network-load-balancer-1-listener"
+    port = 80
+    external_address_spec {
+      ip_version = "ipv4"
     }
   }
 
-  network_interface {
-    subnet_id = yandex_vpc_subnet.privat.id
-  }
+  attached_target_group {
+    target_group_id = yandex_compute_instance_group.lamp-group.load_balancer.0.target_group_id
 
-  metadata = {
-    user-data = "#cloud-config\nusers:\n  - name: ubuntu\n    groups: sudo\n    shell: /bin/bash\n    sudo: ['ALL=(ALL) NOPASSWD:ALL']\n    ssh-authorized-keys:\n      - ${file("~/.ssh/id_ed25519.pub")}"
+    healthcheck {
+      name = "http"
+      http_options {
+        port = 80
+        path = "/index.html"
+      }
+    }
   }
 }

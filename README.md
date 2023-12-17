@@ -1,26 +1,37 @@
-# Домашнее задание к занятию «Организация сети»
+# Домашнее задание к занятию «Вычислительные мощности. Балансировщики нагрузки»  
 
-### Задание 1. Yandex Cloud
+## Задание 1. Yandex Cloud 
 
-1. Создать пустую VPC. Выбрать зону.
-2. Публичная подсеть.
- - Создать в VPC subnet с названием public, сетью 192.168.10.0/24.
- - Создать в этой подсети NAT-инстанс, присвоив ему адрес 192.168.10.254. В качестве image_id использовать fd80mrhj8fl2oe87o4e1.
- - Создать в этой публичной подсети виртуалку с публичным IP, подключиться к ней и убедиться, что есть доступ к интернету.
-3. Приватная подсеть.
- - Создать в VPC subnet с названием private, сетью 192.168.20.0/24.
- - Создать route table. Добавить статический маршрут, направляющий весь исходящий трафик private сети в NAT-инстанс.
- - Создать в этой приватной подсети виртуалку с внутренним IP, подключиться к ней через виртуалку, созданную ранее, и убедиться, что есть доступ к интернету.
+**Что нужно сделать**
+
+1. Создать бакет Object Storage и разместить в нём файл с картинкой:
+
+ - Создать бакет в Object Storage с произвольным именем (например, _имя_студента_дата_).
+ - Положить в бакет файл с картинкой.
+ - Сделать файл доступным из интернета.
+ 
+2. Создать группу ВМ в public подсети фиксированного размера с шаблоном LAMP и веб-страницей, содержащей ссылку на картинку из бакета:
+
+ - Создать Instance Group с тремя ВМ и шаблоном LAMP. Для LAMP рекомендуется использовать `image_id = fd827b91d99psvq5fjit`.
+ - Для создания стартовой веб-страницы рекомендуется использовать раздел `user_data` в [meta_data](https://cloud.yandex.ru/docs/compute/concepts/vm-metadata).
+ - Разместить в стартовой веб-странице шаблонной ВМ ссылку на картинку из бакета.
+ - Настроить проверку состояния ВМ.
+ 
+3. Подключить группу к сетевому балансировщику:
+
+ - Создать сетевой балансировщик.
+ - Проверить работоспособность, удалив одну или несколько ВМ.
+4. (дополнительно)* Создать Application Load Balancer с использованием Instance group и проверкой состояния.
 
 <details>
 <summary>Ответ</summary>
 <br>   
 
-[main.tf](/src/main.tf)
+Все описаные задачи реализованы по средства терраформ, конфигурация доступна по ссылке: [main.tf](/src/main.tf)
 
-Создаем инфраструктуру 
+Создаем инфраструктуру
 ````   
-Plan: 8 to add, 0 to change, 0 to destroy.
+Plan: 10 to add, 0 to change, 0 to destroy.
 
 Do you want to perform these actions?
   Terraform will perform the actions described above.
@@ -28,201 +39,177 @@ Do you want to perform these actions?
 
   Enter a value: yes
 
+yandex_iam_service_account.sa: Creating...
+yandex_compute_image.lamp-vm-image: Creating...
 yandex_vpc_network.cloud: Creating...
-yandex_compute_image.ubuntu-2204-lts: Creating...
-yandex_vpc_network.cloud: Creation complete after 2s [id=enpv9brnm0fodun7ln9l]
-yandex_vpc_route_table.cloud-rt: Creating...
+yandex_vpc_network.cloud: Creation complete after 3s [id=enp158htpm1v0j7v4muh]
 yandex_vpc_subnet.public: Creating...
-yandex_vpc_route_table.cloud-rt: Creation complete after 1s [id=enp2fhsamns2gq40vdni]
-yandex_vpc_subnet.privat: Creating...
-yandex_vpc_subnet.privat: Creation complete after 0s [id=e9bea5902lfjjvubj92c]
-yandex_vpc_subnet.public: Creation complete after 2s [id=e9bkaaqfjuvvutrj0dfh]
-yandex_compute_instance.nat-instance: Creating...
-yandex_compute_image.ubuntu-2204-lts: Still creating... [10s elapsed]
-yandex_compute_image.ubuntu-2204-lts: Creation complete after 13s [id=fd8ngac4duvs68rrtj9c]
-yandex_compute_instance.test-vm: Creating...
-yandex_compute_instance.test-vm2: Creating...
-yandex_compute_instance.nat-instance: Still creating... [10s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [10s elapsed]
-yandex_compute_instance.test-vm: Still creating... [10s elapsed]
-yandex_compute_instance.nat-instance: Still creating... [20s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [20s elapsed]
-yandex_compute_instance.test-vm: Still creating... [20s elapsed]
-yandex_compute_instance.nat-instance: Still creating... [30s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [30s elapsed]
-yandex_compute_instance.test-vm: Still creating... [30s elapsed]
-yandex_compute_instance.nat-instance: Still creating... [40s elapsed]
-yandex_compute_instance.test-vm: Still creating... [40s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [40s elapsed]
-yandex_compute_instance.nat-instance: Still creating... [50s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [50s elapsed]
-yandex_compute_instance.test-vm: Still creating... [50s elapsed]
-yandex_compute_instance.nat-instance: Still creating... [1m0s elapsed]
-yandex_compute_instance.nat-instance: Creation complete after 1m4s [id=fhmksljvfigon0gdlcmq]
-yandex_compute_instance.test-vm: Still creating... [1m0s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [1m0s elapsed]
-yandex_compute_instance.test-vm: Still creating... [1m10s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [1m10s elapsed]
-yandex_compute_instance.test-vm2: Still creating... [1m20s elapsed]
-yandex_compute_instance.test-vm: Still creating... [1m20s elapsed]
-yandex_compute_instance.test-vm: Creation complete after 1m24s [id=fhml02kevai7n09mt9eh]
-yandex_compute_instance.test-vm2: Still creating... [1m30s elapsed]
-yandex_compute_instance.test-vm2: Creation complete after 1m40s [id=fhmte8fn86pi1vcpgd35]
+yandex_iam_service_account.sa: Creation complete after 3s [id=aje5nf5cuau6l01jka05]
+yandex_iam_service_account_static_access_key.sa-static-key: Creating...
+yandex_resourcemanager_folder_iam_member.sa-editor: Creating...
+yandex_vpc_subnet.public: Creation complete after 1s [id=e9b27823jqanfhe1fr61]
+yandex_iam_service_account_static_access_key.sa-static-key: Creation complete after 2s [id=ajej7lrdg6adh7tkvrt1]
+yandex_storage_bucket.cloud-dz2: Creating...
+yandex_resourcemanager_folder_iam_member.sa-editor: Creation complete after 3s [id=b1gb1aal3vgk7p7nr6nd/storage.editor/serviceAccount:aje5nf5cuau6l01jka05]
+yandex_compute_image.lamp-vm-image: Creation complete after 9s [id=fd8lhkraaj5tllm1eaao]
+yandex_compute_instance_group.lamp-group: Creating...
+yandex_storage_bucket.cloud-dz2: Still creating... [10s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [10s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [20s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [20s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [30s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [30s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [40s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [40s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [50s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [50s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [1m0s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [1m0s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [1m10s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [1m10s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [1m20s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [1m20s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [1m30s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [1m30s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [1m40s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [1m40s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [1m50s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [1m50s elapsed]
+yandex_storage_bucket.cloud-dz2: Still creating... [2m0s elapsed]
+yandex_storage_bucket.cloud-dz2: Creation complete after 2m3s [id=cloud-dz2-picture]
+yandex_storage_object.image-object: Creating...
+yandex_storage_object.image-object: Creation complete after 1s [id=test.png]
+yandex_compute_instance_group.lamp-group: Still creating... [2m0s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [2m10s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [2m20s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [2m30s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [2m40s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [2m50s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [3m0s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [3m10s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [3m20s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [3m30s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [3m40s elapsed]
+yandex_compute_instance_group.lamp-group: Still creating... [3m50s elapsed]
+yandex_compute_instance_group.lamp-group: Creation complete after 3m56s [id=cl1khvrddk9mvnco60fc]
+yandex_lb_network_load_balancer.test-lb: Creating...
+yandex_lb_network_load_balancer.test-lb: Creation complete after 3s [id=enpomngr3m2eo09epri7]
 
-Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
-➜  src git:(cloud-01) ✗ yc compute instance list                                  
-+----------------------+-----------+---------------+---------+---------------+----------------+
-|          ID          |   NAME    |    ZONE ID    | STATUS  |  EXTERNAL IP  |  INTERNAL IP   |
-+----------------------+-----------+---------------+---------+---------------+----------------+
-| fhmksljvfigon0gdlcmq | nat-vm    | ru-central1-a | RUNNING | 51.250.77.242 | 192.168.10.254 |
-| fhml02kevai7n09mt9eh | public-vm | ru-central1-a | RUNNING | 51.250.5.75   | 192.168.10.31  |
-| fhmte8fn86pi1vcpgd35 | privat-vm | ru-central1-a | RUNNING |               | 192.168.20.20  |
-+----------------------+-----------+---------------+---------+---------------+----------------+
+Apply complete! Resources: 10 added, 0 changed, 0 destroyed.
+
+➜  src git:(cloud-02) ✗ yc compute instance list  
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+|          ID          |           NAME            |    ZONE ID    | STATUS  |   EXTERNAL IP   |  INTERNAL IP  |
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+| fhm0qeu8nke0h35tjgq7 | cl1khvrddk9mvnco60fc-ofof | ru-central1-a | RUNNING | 158.160.106.19  | 192.168.10.6  |
+| fhmfh4l2mi11i72e36un | cl1khvrddk9mvnco60fc-ywun | ru-central1-a | RUNNING | 158.160.118.107 | 192.168.10.13 |
+| fhmphkbolmd5nt9e1cu6 | cl1khvrddk9mvnco60fc-uqoj | ru-central1-a | RUNNING | 84.252.128.91   | 192.168.10.15 |
++----------------------+---------------------------+---------------+---------+-----------------+---------------+
+
+➜  src git:(cloud-02) ✗ yc load-balancer network-load-balancer list
++----------------------+-------------------------+-------------+----------+----------------+------------------------+--------+
+|          ID          |          NAME           |  REGION ID  |   TYPE   | LISTENER COUNT | ATTACHED TARGET GROUPS | STATUS |
++----------------------+-------------------------+-------------+----------+----------------+------------------------+--------+
+| enpomngr3m2eo09epri7 | network-load-balancer-1 | ru-central1 | EXTERNAL |              1 | enpq3dbuth7rp78p5386   | ACTIVE |
++----------------------+-------------------------+-------------+----------+----------------+------------------------+--------+
+
+➜  src git:(cloud-02) ✗ yc load-balancer network-load-balancer get --name network-load-balancer-1 
+id: enpomngr3m2eo09epri7
+folder_id: b1gb1aal3vgk7p7nr6nd
+created_at: "2023-12-17T11:58:45Z"
+name: network-load-balancer-1
+region_id: ru-central1
+status: ACTIVE
+type: EXTERNAL
+listeners:
+  - name: network-load-balancer-1-listener
+    address: 158.160.132.132
+    port: "80"
+    protocol: TCP
+    target_port: "80"
+    ip_version: IPV4
+attached_target_groups:
+  - target_group_id: enpq3dbuth7rp78p5386
+    health_checks:
+      - name: http
+        interval: 2s
+        timeout: 1s
+        unhealthy_threshold: "2"
+        healthy_threshold: "2"
+        http_options:
+          port: "80"
+          path: /index.html
+
+➜  src git:(cloud-02) ✗ yc load-balancer target-group get --name  lamp-server
+id: enpq3dbuth7rp78p5386
+folder_id: b1gb1aal3vgk7p7nr6nd
+created_at: "2023-12-17T11:54:55Z"
+name: lamp-server
+description: test balanser
+region_id: ru-central1
+targets:
+  - subnet_id: e9b27823jqanfhe1fr61
+    address: 192.168.10.13
+  - subnet_id: e9b27823jqanfhe1fr61
+    address: 192.168.10.15
+  - subnet_id: e9b27823jqanfhe1fr61
+    address: 192.168.10.6
+
 
 ````    
-Проверяем доступы в публичной подсети   
-````
-➜  src git:(cloud-01) ✗ ssh ubuntu@51.250.5.75 
-The authenticity of host '51.250.5.75 (51.250.5.75)' can't be established.
-ED25519 key fingerprint is SHA256:ayb3ApVdReCYwsgKuj2e4ipHZgAKvJq2hBFt5pTxyZA.
-This key is not known by any other names.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '51.250.5.75' (ED25519) to the list of known hosts.
-Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
+Проверям доступность картинки из интернета запросос до сервера
 
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sat Dec 16 07:31:39 AM UTC 2023
-
-  System load:  1.67041015625     Processes:             137
-  Usage of /:   53.8% of 7.79GB   Users logged in:       0
-  Memory usage: 10%               IPv4 address for eth0: 192.168.10.31
-  Swap usage:   0%
-
-
-Expanded Security Maintenance for Applications is not enabled.
-
-0 updates can be applied immediately.
-
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
-
-
-The list of available updates is more than a week old.
-To check for new updates run: sudo apt update
-
-
-The programs included with the Ubuntu system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
-applicable law.
-
-To run a command as administrator (user "root"), use "sudo <command>".
-See "man sudo_root" for details.
-
-ubuntu@fhml02kevai7n09mt9eh:~$ ping 8.8.8.8
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=58 time=18.0 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=58 time=18.0 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=58 time=17.8 ms
-64 bytes from 8.8.8.8: icmp_seq=4 ttl=58 time=18.2 ms
-^C
---- 8.8.8.8 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3003ms
-rtt min/avg/max/mdev = 17.836/18.007/18.192/0.128 ms
 ````   
-Проверяем доступ в приватной подсети
+➜  src git:(cloud-02) ✗ curl -v http:// 158.160.106.19
+* URL rejected: No host part in the URL
+* Closing connection
+curl: (3) URL rejected: No host part in the URL
+*   Trying 158.160.106.19:80...
+* Connected to 158.160.106.19 (158.160.106.19) port 80
+> GET / HTTP/1.1
+> Host: 158.160.106.19
+> User-Agent: curl/8.4.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Sun, 17 Dec 2023 12:04:58 GMT
+< Server: Apache/2.4.29 (Ubuntu)
+< Last-Modified: Sun, 17 Dec 2023 11:56:59 GMT
+< ETag: "85-60cb354a92b20"
+< Accept-Ranges: bytes
+< Content-Length: 133
+< Vary: Accept-Encoding
+< Content-Type: text/html
+< 
+<html><head><title>Test image</title></head><body><img src=https://storage.yandexcloud.net/cloud-dz2-picture/test.png></body></html>
+* Connection #0 to host 158.160.106.19 left intact
+
 ````   
-➜  src git:(cloud-01) ✗ scp ~/.ssh/id_ed25519 ubuntu@51.250.5.75:.ssh/id_ed25519
-id_ed25519                                                                                                                                                                                                                                                                       100%  411    13.5KB/s   00:00    
-➜  src git:(cloud-01) ✗ ssh ubuntu@51.250.5.75                                  
-Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
+Проверяем доступность картинки из интернета запросом до балансира
 
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
+````   
+➜  src git:(cloud-02) ✗ curl -v http://158.160.132.132
+*   Trying 158.160.132.132:80...
+* Connected to 158.160.132.132 (158.160.132.132) port 80
+> GET / HTTP/1.1
+> Host: 158.160.132.132
+> User-Agent: curl/8.4.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Sun, 17 Dec 2023 12:06:17 GMT
+< Server: Apache/2.4.29 (Ubuntu)
+< Last-Modified: Sun, 17 Dec 2023 11:57:10 GMT
+< ETag: "85-60cb35558d3e0"
+< Accept-Ranges: bytes
+< Content-Length: 133
+< Vary: Accept-Encoding
+< Content-Type: text/html
+< 
+<html><head><title>Test image</title></head><body><img src=https://storage.yandexcloud.net/cloud-dz2-picture/test.png></body></html>
+* Connection #0 to host 158.160.132.132 left intact
+  
+````   
 
-  System information as of Sat Dec 16 07:32:54 AM UTC 2023
-
-  System load:  0.57373046875     Processes:             136
-  Usage of /:   53.8% of 7.79GB   Users logged in:       0
-  Memory usage: 10%               IPv4 address for eth0: 192.168.10.31
-  Swap usage:   0%
-
-
-Expanded Security Maintenance for Applications is not enabled.
-
-0 updates can be applied immediately.
-
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
-
-
-The list of available updates is more than a week old.
-To check for new updates run: sudo apt update
-
-Last login: Sat Dec 16 07:31:43 2023 from 109.248.252.157
-To run a command as administrator (user "root"), use "sudo <command>".
-See "man sudo_root" for details.
-
-ubuntu@fhml02kevai7n09mt9eh:~$ ssh 192.168.20.20 
-The authenticity of host '192.168.20.20 (192.168.20.20)' can't be established.
-ED25519 key fingerprint is SHA256:FMU77HfHrK+fA+qShewlswUvzDNwemuxNoe0JSj01gQ.
-This key is not known by any other names
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '192.168.20.20' (ED25519) to the list of known hosts.
-Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-89-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sat Dec 16 07:33:18 AM UTC 2023
-
-  System load:  0.58154296875     Processes:             139
-  Usage of /:   53.3% of 7.79GB   Users logged in:       0
-  Memory usage: 10%               IPv4 address for eth0: 192.168.20.20
-  Swap usage:   0%
-
-
-Expanded Security Maintenance for Applications is not enabled.
-
-0 updates can be applied immediately.
-
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
-
-
-The list of available updates is more than a week old.
-To check for new updates run: sudo apt update
-
-
-The programs included with the Ubuntu system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
-applicable law.
-
-To run a command as administrator (user "root"), use "sudo <command>".
-See "man sudo_root" for details.
-
-ubuntu@fhmte8fn86pi1vcpgd35:~$ ping 8.8.8.8
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=54 time=19.5 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=54 time=18.9 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=54 time=18.9 ms
-64 bytes from 8.8.8.8: icmp_seq=4 ttl=54 time=18.9 ms
-^C
---- 8.8.8.8 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3005ms
-rtt min/avg/max/mdev = 18.876/19.047/19.463/0.241 ms
-
-````    
 
 </details>
- 

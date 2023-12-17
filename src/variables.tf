@@ -14,8 +14,17 @@ variable "folder_id" {
   description = "https://cloud.yandex.ru/docs/resource-manager/operations/folder/get-id"
 }
 
+variable "admin_id" {
+  type        = string
+}
+
 variable "default_zone" {
   type        = string
   default     = "ru-central1-a"
   description = "https://cloud.yandex.ru/docs/overview/concepts/geo-scope"
+}
+
+variable "image_id" {
+  type        = string
+  default     = "https://storage.yandexcloud.net/cloud-dz2-picture/test.png"
 }
