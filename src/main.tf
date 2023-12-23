@@ -9,130 +9,79 @@ resource "yandex_vpc_subnet" "public" {
   network_id     = "${yandex_vpc_network.cloud.id}"
 }
 
-resource "yandex_iam_service_account" "sa" {
-  name = "downloader"
+resource "yandex_dns_zone" "zone-netology" {
+  name        = "tomaevmaxdz3"
+  description = "desc"
+  zone             = "tomaevmaxdz3.ru."
+  public           = true
 }
 
-// Назначение роли сервисному аккаунту
-resource "yandex_resourcemanager_folder_iam_member" "sa-editor" {
-  folder_id = var.folder_id
-  role      = "storage.editor"
-  member    = "serviceAccount:${yandex_iam_service_account.sa.id}"
+resource "yandex_cm_certificate" "le-certificate" {
+  name    = "tomaevmaxdz3"
+  domains = ["tomaevmaxdz3.ru"]
+
+  managed {
+    challenge_type = "DNS_CNAME"
+  }
+}
+
+resource "yandex_kms_symmetric_key" "test-key" {
+  name              = "test-symetric-key"
+  description       = "dz3"
+  default_algorithm = "AES_128"
+  rotation_period   = "8760h" // equal to 1 year
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 // Создание статического ключа доступа
 resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
-  service_account_id = yandex_iam_service_account.sa.id
+  service_account_id = var.admin_id
   description        = "static access key for object storage"
 }
 
 // Создание бакета с использованием ключа
-resource "yandex_storage_bucket" "cloud-dz2" {
+resource "yandex_storage_bucket" "cloud-dz3" {
   access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
-  bucket     = "cloud-dz2-picture"
+  bucket     = "tomaevmaxdz3.ru"
   force_destroy = "true"
+  acl           = "public-read"
   max_size = 1073741824
+  https {
+    certificate_id = yandex_cm_certificate.le-certificate.id
+  }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = yandex_kms_symmetric_key.test-key.id
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
 }
 
 resource "yandex_storage_object" "image-object" {
-  access_key = yandex_storage_bucket.cloud-dz2.access_key
-  secret_key = yandex_storage_bucket.cloud-dz2.secret_key
+  access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
+  secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
   acl        = "public-read"
-  bucket     = "cloud-dz2-picture"
+  bucket     = "tomaevmaxdz3.ru"
   key        = "test.png"
   source     = "/Users/maksimtomaev/Downloads/test.png"
-  depends_on = [
-    yandex_storage_bucket.cloud-dz2,
-  ]
+  depends_on = [yandex_storage_bucket.cloud-dz3]
 }
 
-resource "yandex_compute_image" "lamp-vm-image" {
-  source_family = "lamp"
-}
-
-resource "yandex_compute_instance_group" "lamp-group" {
-  name                = "lamp-server"
-  folder_id           = var.folder_id
-  service_account_id  =  var.admin_id
-  deletion_protection = false
-  instance_template {
-    platform_id = "standard-v1"
-    resources {
-      memory = 2
-      cores  = 2
-    }
-    boot_disk {
-      mode = "READ_WRITE"
-      initialize_params {
-        image_id = yandex_compute_image.lamp-vm-image.id
-        size     = 4
-      }
-    }
-    network_interface {
-      network_id = "${yandex_vpc_network.cloud.id}"
-      subnet_ids = ["${yandex_vpc_subnet.public.id}"]
-      nat = "true"
-    }
-    metadata = {
-      user-data = "#cloud-config\nusers:\n  - name: ubuntu\n    groups: sudo,wheel\n    shell: /bin/bash\n    sudo: ['ALL=(ALL) NOPASSWD:ALL']\n    ssh-authorized-keys:\n      - ${file("~/.ssh/id_ed25519.pub")}runcmd:\n  - echo '<html><head><title>Test image</title></head><body><img src=${var.image_id}></body></html>' > /var/www/html/index.html"
-    }
-    network_settings {
-      type = "STANDARD"
-    }
-  }
-
-  scale_policy {
-    fixed_scale {
-      size = 3
-    }
-  }
-
-  allocation_policy {
-    zones = ["ru-central1-a"]
-  }
-
-  deploy_policy {
-    max_unavailable = 3
-    max_creating    = 3
-    max_expansion   = 3
-    max_deleting    = 3
-  }
-
-  health_check {
-    interval = 60
-    timeout = 30
-    http_options {
-      port = 80
-      path = "/index.html"
-    }
-  }
-  load_balancer {
-    target_group_name        = "lamp-server"
-    target_group_description = "test balanser"
-  }
-}
-
-resource "yandex_lb_network_load_balancer" "test-lb" {
-  name = "network-load-balancer-1"
-
-  listener {
-    name = "network-load-balancer-1-listener"
-    port = 80
-    external_address_spec {
-      ip_version = "ipv4"
-    }
-  }
-
-  attached_target_group {
-    target_group_id = yandex_compute_instance_group.lamp-group.load_balancer.0.target_group_id
-
-    healthcheck {
-      name = "http"
-      http_options {
-        port = 80
-        path = "/index.html"
-      }
-    }
-  }
+resource "yandex_storage_object" "index-html" {
+  access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
+  secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
+  acl        = "public-read"
+  bucket     = "tomaevmaxdz3.ru"
+  key        = "index.html"
+  source     = "/Users/maksimtomaev/Downloads/index.html"
+  depends_on = [yandex_storage_bucket.cloud-dz3]
 }
