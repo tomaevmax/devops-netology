@@ -45,5 +45,6 @@ Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
 
 ````   
 Проверяем в GUI yandex cloud, что файлы загружены и зашифрованы.
+![Снимок экрана 2023-12-23 в 13 53 32](https://github.com/tomaevmax/devops-netology/assets/32243921/1d2da219-b4fd-4584-83ed-5fcadf41d344)
 
 </details>
