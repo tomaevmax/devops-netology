@@ -211,6 +211,8 @@ Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
 ````   
 Смотрим в GUI состояния кластера mysql
 
+![Снимок экрана 2023-12-24 в 15 23 42](https://github.com/tomaevmax/devops-netology/assets/32243921/33b5b4dd-e60b-41f2-9573-be50e9f8da21)
+
 
 Подключаемся к кластеру Kubernetes по средствам kubctl
 
