@@ -24,7 +24,12 @@ variable "default_zone" {
   description = "https://cloud.yandex.ru/docs/overview/concepts/geo-scope"
 }
 
-variable "image_id" {
+variable "pass_db" {
+  type        = string
+  default     = "https://storage.yandexcloud.net/cloud-dz2-picture/test.png"
+}
+
+variable "k8s_version" {
   type        = string
   default     = "https://storage.yandexcloud.net/cloud-dz2-picture/test.png"
 }
